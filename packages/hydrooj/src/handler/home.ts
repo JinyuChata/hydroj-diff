@@ -1,21 +1,21 @@
 import path from 'path';
-import { generateRegistrationOptions, verifyRegistrationResponse } from '@simplewebauthn/server';
+import {generateRegistrationOptions, verifyRegistrationResponse} from '@simplewebauthn/server';
 import yaml from 'js-yaml';
-import { pick } from 'lodash';
-import { Binary, ObjectId } from 'mongodb';
-import { Context } from '../context';
+import {pick} from 'lodash';
+import {Binary, ObjectId} from 'mongodb';
+import {Context} from '../context';
 import {
     AuthOperationError, BlacklistedError, DomainAlreadyExistsError, InvalidTokenError,
     NotFoundError, PermissionError, UserAlreadyExistError,
     UserNotFoundError, ValidationError, VerifyPasswordError,
 } from '../error';
-import { DomainDoc, MessageDoc, Setting } from '../interface';
-import avatar, { validate } from '../lib/avatar';
+import {DomainDoc, MessageDoc, Setting} from '../interface';
+import avatar, {validate} from '../lib/avatar';
 import * as mail from '../lib/mail';
 import * as useragent from '../lib/useragent';
-import { verifyTFA } from '../lib/verifyTFA';
+import {verifyTFA} from '../lib/verifyTFA';
 import BlackListModel from '../model/blacklist';
-import { PERM, PRIV } from '../model/builtin';
+import {PERM, PRIV} from '../model/builtin';
 import * as contest from '../model/contest';
 import * as discussion from '../model/discussion';
 import domain from '../model/domain';
@@ -30,7 +30,7 @@ import user from '../model/user';
 import {
     ConnectionHandler, Handler, param, query, requireSudo, subscribe, Types,
 } from '../service/server';
-import { camelCase, md5 } from '../utils';
+import {camelCase, md5} from '../utils';
 
 export class HomeHandler extends Handler {
     uids = new Set<number>();
@@ -49,10 +49,10 @@ export class HomeHandler extends Handler {
                 ? {}
                 : {
                     $or: [
-                        { maintainer: this.user._id },
-                        { owner: this.user._id },
-                        { assign: { $in: groups } },
-                        { assign: { $size: 0 } },
+                        {maintainer: this.user._id},
+                        {owner: this.user._id},
+                        {assign: {$in: groups}},
+                        {assign: {$size: 0}},
                     ],
                 },
         }).sort({
@@ -66,23 +66,27 @@ export class HomeHandler extends Handler {
 
     async getContest(domainId: string, limit = 10) {
         if (!this.user.hasPerm(PERM.PERM_VIEW_CONTEST)) return [[], {}];
+        console.log('4ax86h')
+        console.log(Object.keys(contest.RULES))
         const rules = Object.keys(contest.RULES).filter((i) => !contest.RULES[i].hidden);
+        console.log(rules)
         const groups = (await user.listGroup(domainId, this.user.hasPerm(PERM.PERM_VIEW_HIDDEN_CONTEST) ? undefined : this.user._id))
             .map((i) => i.name);
+        console.log("getContest", groups)
         const q = {
-            rule: { $in: rules },
+            rule: {$in: rules},
             ...this.user.hasPerm(PERM.PERM_VIEW_HIDDEN_CONTEST)
                 ? {}
                 : {
                     $or: [
-                        { maintainer: this.user._id },
-                        { owner: this.user._id },
-                        { assign: { $in: groups } },
-                        { assign: { $size: 0 } },
+                        {maintainer: this.user._id},
+                        {owner: this.user._id},
+                        {assign: {$in: groups}},
+                        {assign: {$size: 0}},
                     ],
                 },
         };
-        const tdocs = await contest.getMulti(domainId, q).sort({ endAt: -1, beginAt: -1, _id: -1 })
+        const tdocs = await contest.getMulti(domainId, q).sort({endAt: -1, beginAt: -1, _id: -1})
             .limit(limit).toArray();
         const tsdict = await contest.getListStatus(
             domainId, this.user._id, tdocs.map((tdoc) => tdoc.docId),
@@ -93,7 +97,7 @@ export class HomeHandler extends Handler {
     async getTraining(domainId: string, limit = 10) {
         if (!this.user.hasPerm(PERM.PERM_VIEW_TRAINING)) return [[], {}];
         const tdocs = await training.getMulti(domainId)
-            .sort({ pin: -1, _id: 1 }).limit(limit).toArray();
+            .sort({pin: -1, _id: 1}).limit(limit).toArray();
         const tsdict = await training.getListStatus(
             domainId, this.user._id, tdocs.map((tdoc) => tdoc.docId),
         );
@@ -110,8 +114,8 @@ export class HomeHandler extends Handler {
 
     async getRanking(domainId: string, limit = 50) {
         if (!this.user.hasPerm(PERM.PERM_VIEW_RANKING)) return [];
-        const dudocs = await domain.getMultiUserInDomain(domainId, { uid: { $gt: 1 } })
-            .sort({ rp: -1 }).project({ uid: 1 }).limit(limit).toArray();
+        const dudocs = await domain.getMultiUserInDomain(domainId, {uid: {$gt: 1}})
+            .sort({rp: -1}).project({uid: 1}).limit(limit).toArray();
         const uids = dudocs.map((dudoc) => dudoc.uid);
         this.collectUser(uids);
         return uids;
@@ -119,7 +123,7 @@ export class HomeHandler extends Handler {
 
     async getStarredProblems(domainId: string, limit = 50) {
         if (!this.user.hasPerm(PERM.PERM_VIEW_PROBLEM)) return [[], {}];
-        const psdocs = await ProblemModel.getMultiStatus(domainId, { uid: this.user._id, star: true })
+        const psdocs = await ProblemModel.getMultiStatus(domainId, {uid: this.user._id, star: true})
             .sort('_id', 1).limit(limit).toArray();
         const psdict = {};
         for (const psdoc of psdocs) psdict[psdoc.docId] = psdoc;
@@ -132,28 +136,83 @@ export class HomeHandler extends Handler {
     }
 
     async getRecentProblems(domainId: string, limit = 10) {
+        console.log("domainId", domainId)
+
         if (!this.user.hasPerm(PERM.PERM_VIEW_PROBLEM)) return [[], {}];
-        const pdocs = await ProblemModel.getMulti(domainId, { hidden: false })
-            .sort({ _id: -1 }).limit(limit).toArray();
+
+        const groups = (await user.listGroup(domainId, this.user._id))
+            .map((i) => i.name);
+        console.log("getRecentProblems", groups)
+
+        const pdocs = await ProblemModel.getMulti(domainId, {
+            hidden: false,
+            ...{
+                $or: [
+                    {assign: {$in: groups}},
+                    {assign: {$size: 0}},
+                    {assign: {$exists: false}},
+                ]
+            }
+        }).sort({_id: -1}).limit(limit).toArray();
         const psdict = this.user.hasPriv(PRIV.PRIV_USER_PROFILE)
             ? await ProblemModel.getListStatus(domainId, this.user._id, pdocs.map((pdoc) => pdoc.docId))
             : {};
         return [pdocs, psdict];
+    }
+    async getRecentProblemsTags(domainId: string, limit = 10) {
+        console.log("domainId", domainId)
+
+        if (!this.user.hasPerm(PERM.PERM_VIEW_PROBLEM)) return [[], {}];
+
+        const groups = (await user.listGroup(domainId, this.user._id))
+            .map((i) => i.name);
+        console.log("getRecentProblemsTags", groups)
+
+        const tags = ['C++', 'Python', 'Scratch']
+        const res = []
+        for (const tag of tags) {
+            const pdocs = await ProblemModel.getMulti(domainId, {
+                hidden: false,
+                ...{
+                    $or: [
+                        {assign: {$in: groups}},
+                        {assign: {$size: 0}},
+                        {assign: {$exists: false}},
+                    ]
+                }
+            }).sort({_id: -1}).limit(limit).toArray();
+            const psdict = this.user.hasPriv(PRIV.PRIV_USER_PROFILE)
+                ? await ProblemModel.getListStatus(domainId, this.user._id, pdocs.map((pdoc) => pdoc.docId))
+                : {};
+            res[tag] = [tag, pdocs, psdict];
+        }
+        console.log("RESULT")
+        console.log(res)
+        return res
     }
 
     getDiscussionNodes(domainId: string) {
         return discussion.getNodes(domainId);
     }
 
-    async get({ domainId }) {
+    @param('origin', Types.Int, true)
+    async get(domainId, origin:number=0) {
+        console.log('M1111111111111111111111111111111111111111111111');
         const homepageConfig = this.domain.homepage || system.get('hydrooj.homepage');
+        console.log(system.get('hydrooj.homepage'))
         const info = yaml.load(homepageConfig) as any;
+        console.log("INFO")
+        info[1]['recent_problems_tags'] = 10
+        console.log(info)
+
         const contents = [];
+        const firstpages = {}; // fzr add firstpage content
         for (const column of info) {
             const tasks = [];
             for (const name in column) {
                 if (name === 'width') continue;
                 const func = `get${camelCase(name).replace(/^[a-z]/, (i) => i.toUpperCase())}`;
+                console.log(func)
                 if (!this[func]) tasks.push([name, column[name]]);
                 else {
                     tasks.push(
@@ -163,23 +222,50 @@ export class HomeHandler extends Handler {
                     );
                 }
             }
+            const sections = await Promise.all(tasks)
             contents.push({
                 width: column.width,
                 // eslint-disable-next-line no-await-in-loop
-                sections: await Promise.all(tasks),
+                sections: sections,
             });
+            for (const section of sections) {
+                firstpages[section[0]] = section[1]
+            }
         }
+        // console.log('jx134z', firstpages)
         const udict = await user.getList(domainId, Array.from(this.uids));
-        this.response.template = 'main.html';
+        console.log("CONTENTS")
+        console.log(firstpages)
+        // console.log('cs2a6x',JSON.stringify(contents, null, 2));
+        // console.log(JSON.stringify(contents, null, 2));
+
+        // add search by tags
+
+        if (origin === 0)
+            this.response.template = 'main.html';
+        else
+            this.response.template = 'main_backup.html';
         this.response.body = {
             contents,
             udict,
             domain: this.domain,
+            firstpages,
+            pcount: 1000,
+            pcountRelation: 'eq',
+            value: '',
+            // fragments: (await Promise.all([
+            //     this.renderHTML('partials/problem_stat.html', { pcount: 100000, pcountRelation: 'eq' }),
+            // ])).map((i) => ({ html: i })),
+
+            // fragments: [
+            //     {html: await this.renderHTML('partials/problem_stat.html', {pcount: 100000, pcountRelation: 'eq'})},
+            // ],
         };
     }
 }
 
 let geoip: Context['geoip'] = null;
+
 class HomeSecurityHandler extends Handler {
     @requireSudo
     async get() {
@@ -240,7 +326,7 @@ class HomeSecurityHandler extends Handler {
         const [code] = await token.add(
             token.TYPE_CHANGEMAIL,
             system.get('session.unsaved_expire_seconds'),
-            { uid: this.user._id, email },
+            {uid: this.user._id, email},
         );
         const prefix = (this.domain.host || [])[0] || system.get('server.url');
         const m = await this.renderHTML('user_changemail_mail.html', {
@@ -276,7 +362,7 @@ class HomeSecurityHandler extends Handler {
     async postEnableTfa(domainId: string, code: string, secret: string) {
         if (this.user._tfa) throw new AuthOperationError('2FA', 'enabled');
         if (!verifyTFA(secret, code)) throw new InvalidTokenError('2FA');
-        await user.setById(this.user._id, { tfa: secret });
+        await user.setById(this.user._id, {tfa: secret});
         this.back();
     }
 
@@ -316,7 +402,9 @@ class HomeSecurityHandler extends Handler {
             expectedChallenge: this.session.webauthnVerify,
             expectedOrigin: this.request.headers.origin,
             expectedRPID: this.getAuthnHost(),
-        }).catch(() => { throw new ValidationError('verify'); });
+        }).catch(() => {
+            throw new ValidationError('verify');
+        });
         if (!verification.verified) throw new ValidationError('verify');
         const info = verification.registrationInfo;
         const id = Buffer.from(info.credentialID);
@@ -330,7 +418,7 @@ class HomeSecurityHandler extends Handler {
             regat: Date.now(),
             authenticatorAttachment: this.args.result.authenticatorAttachment || 'cross-platform',
         });
-        await user.setById(this.user._id, { authenticators: this.user._authenticators });
+        await user.setById(this.user._id, {authenticators: this.user._authenticators});
         this.back();
     }
 
@@ -339,14 +427,14 @@ class HomeSecurityHandler extends Handler {
     async postDisableAuthn(domainId: string, id: string) {
         const authenticators = this.user._authenticators?.filter((c) => Buffer.from(c.credentialID.buffer).toString('base64') !== id);
         if (this.user._authenticators?.length === authenticators?.length) throw new ValidationError('authenticator');
-        await user.setById(this.user._id, { authenticators });
+        await user.setById(this.user._id, {authenticators});
         this.back();
     }
 
     @requireSudo
     async postDisableTfa() {
         if (!this.user._tfa) throw new AuthOperationError('2FA', 'disabled');
-        await user.setById(this.user._id, undefined, { tfa: '' });
+        await user.setById(this.user._id, undefined, {tfa: ''});
         this.back();
     }
 }
@@ -418,7 +506,7 @@ class HomeAvatarHandler extends Handler {
     async post(domainId: string, input: string) {
         if (input) {
             if (!validate(input)) throw new ValidationError('avatar');
-            await user.setById(this.user._id, { avatar: input });
+            await user.setById(this.user._id, {avatar: input});
         } else if (this.request.files.file) {
             const file = this.request.files.file;
             if (file.size > 8 * 1024 * 1024) throw new ValidationError('file');
@@ -426,7 +514,7 @@ class HomeAvatarHandler extends Handler {
             if (!['.jpg', '.jpeg', '.png'].includes(ext)) throw new ValidationError('file');
             await storage.put(`user/${this.user._id}/.avatar${ext}`, file.filepath, this.user._id);
             // TODO: cached avatar
-            await user.setById(this.user._id, { avatar: `url:/file/${this.user._id}/.avatar${ext}` });
+            await user.setById(this.user._id, {avatar: `url:/file/${this.user._id}/.avatar${ext}`});
         } else throw new ValidationError('avatar');
         this.back();
     }
@@ -457,7 +545,7 @@ class HomeDomainHandler extends Handler {
         if (!all) {
             dudict = await domain.getDictUserByDomainId(this.user._id);
             const dids = Object.keys(dudict);
-            res = await domain.getMulti({ _id: { $in: dids } }).toArray();
+            res = await domain.getMulti({_id: {$in: dids}}).toArray();
         } else {
             this.checkPriv(PRIV.PRIV_VIEW_ALL_DOMAIN);
             res = await domain.getMulti().toArray();
@@ -480,19 +568,19 @@ class HomeDomainHandler extends Handler {
                 || udoc.hasPriv(PRIV.PRIV_MANAGE_ALL_DOMAIN);
         }
         this.response.template = 'home_domain.html';
-        this.response.body = { ddocs, dudict, canManage };
+        this.response.body = {ddocs, dudict, canManage};
     }
 
     @param('id', Types.String)
     async postStar(domainId: string, id: string) {
-        await user.setById(this.user._id, { pinnedDomains: [...this.user.pinnedDomains, id] });
-        this.back({ star: true });
+        await user.setById(this.user._id, {pinnedDomains: [...this.user.pinnedDomains, id]});
+        this.back({star: true});
     }
 
     @param('id', Types.String)
     async postUnstar(domainId: string, id: string) {
-        await user.setById(this.user._id, { pinnedDomains: this.user.pinnedDomains.filter((i) => i !== id) });
-        this.back({ star: false });
+        await user.setById(this.user._id, {pinnedDomains: this.user.pinnedDomains.filter((i) => i !== id)});
+        this.back({star: false});
     }
 }
 
@@ -514,14 +602,14 @@ class HomeDomainCreateHandler extends Handler {
         // When this domain is deleted but previously added to user's list we shouldn't push it again
         const push = !this.user.pinnedDomains?.includes(domainId);
         await Promise.all([
-            domain.edit(domainId, { avatar }),
+            domain.edit(domainId, {avatar}),
             domain.setUserRole(domainId, this.user._id, 'root'),
             push
-                ? user.setById(this.user._id, undefined, undefined, { pinnedDomains: domainId })
+                ? user.setById(this.user._id, undefined, undefined, {pinnedDomains: domainId})
                 : Promise.resolve(),
         ]);
-        this.response.redirect = this.url('domain_dashboard', { domainId });
-        this.response.body = { domainId };
+        this.response.redirect = this.url('domain_dashboard', {domainId});
+        this.response.body = {domainId};
     }
 }
 
@@ -540,13 +628,13 @@ class HomeMessagesHandler extends Handler {
             const target = m.from === this.user._id ? m.to : m.from;
             parsed[target] ||= {
                 _id: target,
-                udoc: { ...udict[target], avatarUrl: avatar(udict[target].avatar) },
+                udoc: {...udict[target], avatarUrl: avatar(udict[target].avatar)},
                 messages: [],
             };
             parsed[target].messages.push(m);
         }
-        await user.setById(this.user._id, { unreadMsg: 0 });
-        this.response.body = { messages: parsed };
+        await user.setById(this.user._id, {unreadMsg: 0});
+        this.response.body = {messages: parsed};
         this.response.template = 'home_messages.html';
     }
 
@@ -558,7 +646,7 @@ class HomeMessagesHandler extends Handler {
         if (!udoc) throw new UserNotFoundError(uid);
         if (udoc.avatar) udoc.avatarUrl = avatar(udoc.avatar);
         const mdoc = await message.send(this.user._id, uid, content, message.FLAG_UNREAD);
-        this.back({ mdoc, udoc });
+        this.back({mdoc, udoc});
     }
 
     @param('messageId', Types.ObjectId)
@@ -587,7 +675,7 @@ class HomeMessagesConnectionHandler extends ConnectionHandler {
         if (uid !== this.user._id) return;
         const udoc = (await user.getById(this.args.domainId, mdoc.from))!;
         udoc.avatarUrl = avatar(udoc.avatar, 64);
-        this.send({ udoc, mdoc });
+        this.send({udoc, mdoc});
     }
 }
 

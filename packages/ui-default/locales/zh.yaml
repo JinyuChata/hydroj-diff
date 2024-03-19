@@ -103,6 +103,8 @@ Are you sure you want to delete this subtask?: 确认删除此子任务？
 Argument {0} is invalid.: 非法的参数 {0} 。
 Arguments: 参数
 Assign User or Group: 分配给用户或小组
+Pay to View: 付费查看题目
+Pay to Submit: 付费提交代码
 Assign: 分配给
 Assignment: 作业
 At least 4 characters: 至少 4 个字符
@@ -575,7 +577,7 @@ New file: 新文件
 New filename(s): 新文件名
 New Password: 新密码
 New Training Plan: 新训练计划
-New: 创建
+New: 已创建
 No {0} at current.: 当前没有{0}。
 No changes to make.: 没有任何修改。
 No comments so far...: 目前还没有评论...
@@ -720,7 +722,7 @@ Quit Scratchpad: 退出在线编程模式
 Quote: 引用
 Rank: 排名
 Ranked Users: 排名用户
-ranking: 排名
+ranking: 封神榜
 Read all record codes: 读取所有记录的代码
 Read data of own problems: 读取自己题目的数据
 Read data of problem: 读取题目数据
@@ -777,6 +779,10 @@ Roles: 角色
 RP Algorithm: RP 算法
 rpDetailText_contest: 比赛
 rpDetailText_problem: 题目
+rpDetailText_problem_coci: COCI
+rpDetailText_problem_python: Python
+rpDetailText_problem_cpp: C++
+rpDetailText_problem_scratch: Scratch
 Rule: 规则
 Run Pretest: 运行自测
 Run: 运行

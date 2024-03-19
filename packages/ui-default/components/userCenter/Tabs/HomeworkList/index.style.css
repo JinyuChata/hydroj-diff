@@ -1,0 +1,51 @@
+.homework-container {
+  width: 100%;
+  padding-top: 20px;
+}
+
+.homework-item {
+  width: 100%;
+  margin: 10px 20px;
+
+  font-family: Microsoft YaHei;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: normal;
+  letter-spacing: 0em;
+
+  font-feature-settings: "kern" on;
+
+  display: flex;
+  flex-direction: row;
+
+  > * {
+    display: block;
+  }
+
+  .homework-name {
+    cursor: pointer;
+    font-weight: bold;
+    color: #3d3d3d;
+
+    margin-right: 10px;
+  }
+
+  .homework-qnum {
+    color: #ff7d37;
+    min-width: 95px;
+  }
+
+  .homework-description {
+    font-size: 14px;
+    color: #797979;
+    flex: 1;
+  }
+
+  .homework-edit {
+    cursor: pointer;
+    > svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

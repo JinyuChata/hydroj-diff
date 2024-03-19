@@ -142,6 +142,7 @@ export function getMulti<K extends keyof DocType>(
     domainId: string, docType: K, query?: Filter<DocType[K]>, projection?: Projection<DocType[K]>,
 ): FindCursor<DocType[K]> {
     let cursor = coll.find({ docType, domainId, ...query });
+    // console.log('isnak1', domainId, docType, query, projection, cursor)
     if (projection) cursor = cursor.project(buildProjection(projection));
     return cursor;
 }

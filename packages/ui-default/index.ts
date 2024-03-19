@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 import {
-  ContestModel, Context, Handler, ObjectId, param, PERM, PRIV, ProblemModel, Schema,
+  ContestModel, Context, Handler, ObjectId, param, PERM, PRIV, ProblemModel, query, Schema,
   SettingModel, SystemModel, SystemSettings, Types, UserModel,
 } from 'hydrooj';
 import convert from 'schemastery-jsonschema';
@@ -24,7 +24,8 @@ class WikiHelpHandler extends Handler {
 class WikiAboutHandler extends Handler {
   noCheckPermView = true;
 
-  async get() {
+  @query('type', Types.Int, true)
+  async get(domainId: string, type: number=0) {
     let raw = SystemModel.get('ui-default.about') || '';
     // TODO template engine
     raw = raw.replace(/{{ name }}/g, this.domain.ui?.name || SystemModel.get('server.name')).trim();
@@ -40,7 +41,13 @@ class WikiAboutHandler extends Handler {
         });
       } else sections[sections.length - 1].content += `${line}\n`;
     }
-    this.response.template = 'about.html';
+    if (type === 0)
+    this.response.template = 'jiaopeijigougongxiang.html';
+    else
+    if (type === 1)
+      this.response.template = 'saishiweituo.html';
+    else
+      this.response.template = 'zhongxiaoxueoj.html';
     this.response.body = { sections };
   }
 }

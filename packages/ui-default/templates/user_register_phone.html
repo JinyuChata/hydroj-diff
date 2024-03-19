@@ -1,0 +1,263 @@
+{% extends "layout/immersive.html" %}
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .main_register {
+        width: 100%;
+        height: 100vh;
+        background: #F2F2F2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .page_wrapper {
+        width: 375px;
+        background: #FFFFFF;
+        padding: 16px 0 71px 0;
+    }
+
+    h1 {
+        color: #101010;
+        font-size: 22px;
+        font-family: PingFangSC-bold;
+    }
+
+    em {
+        font-style: normal;
+    }
+
+    /* logo图片 */
+    .logo {
+        display: block;
+        width: 98px;
+        height: 92px;
+        margin: 36.98px 0 14px 48.62px;
+    }
+
+    /* 标题 */
+    .title {
+        display: block;
+        width: 223px;
+        height: 41px;
+        margin: 0 0 0 48.62px;
+    }
+
+    /* 注册方式 */
+    .register_mode {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .phone,
+    .email {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .phone span,
+    .email span {
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 14px;
+        font-family: PingFangSC-regular;
+    }
+
+    /* 电话图标 */
+    .icon_phone {
+        width: 66px;
+        height: 66px;
+        margin-bottom: 15px;
+    }
+
+    /* 邮箱图标 */
+    .icon_emial {
+        width: 62px;
+        height: 62px;
+        margin-bottom: 19px;
+    }
+
+    /* 下一步 */
+    .btn_next {
+        width: 248.45px;
+        height: 44px;
+        border-radius: 6px;
+        background-color: rgba(246, 122, 53, 1);
+        color: rgba(255, 255, 255, 1);
+        font-size: 14px;
+        text-align: center;
+        font-family: Roboto;
+        border: 1px solid rgba(187, 187, 187, 1);
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 返回 */
+    .return_box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 19px 0 16px;
+    }
+
+    .return_box .return {
+        display: flex;
+        align-items: center;
+    }
+
+    .return_box .return span {
+        color: rgba(74, 74, 74, 1);
+        font-size: 14px;
+        line-height: 20px;
+        font-family: PingFangSC-regular;
+    }
+
+    /* 返回图标 */
+    /* 关闭图标 */
+    /* 密码图标 */
+    .icon_arrow_left,
+    .icon_close,
+    .icon_password {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* 点击完成验证 */
+    .btn_verification {
+        width: 300px;
+        height: 48px;
+        display: block;
+    }
+</style>
+<style>
+    .sign_up_by_phone {
+        width: 375px;
+        background: #FFFFFF;
+        padding-bottom: 22.05px;
+    }
+    .logo {
+        margin: 36.98px 0 4.02px 48.62px;
+    }
+    .title {
+        margin: 0 0 0 37px;
+    }
+    .return {
+        display: flex;
+        align-items: center;
+        margin: 0 0 21px 30.61px;
+    }
+    .return span {
+        color: rgba(74,74,74,1);
+        font-size: 14px;
+        font-family: PingFangSC-regular;
+    }
+    h1 {
+        margin: 0 0 10px 50.61px;
+    }
+    .email {
+        width: 186px;
+        height: 20px;
+        color: rgba(174, 174, 178, 1);
+        font-size: 14px;
+        font-family: PingFangSC-regular;
+        border: none;
+        outline: none;
+        background: none;
+        border-radius: none;
+        margin: 0 0 44.05px 50.61px;
+    }
+    .email::placeholder {
+        color: rgba(174, 174, 178, 1);
+    }
+    .name {
+        display: flex;
+        align-items: flex-end;
+        margin: 0 0 43px 50.61px;
+    }
+    .name span {
+        color: rgba(199, 199, 204, 1);
+        font-size: 16px;
+        font-family: PingFangSC-regular;
+    }
+    .name span em {
+        font-size: 16px;
+        color: #000000;
+        font-family: PingFangSC-regular;
+        margin-left: 5px;
+    }
+    .name input {
+        width: 250px;
+        height: 22px;
+        color: rgba(199, 199, 204, 1);
+        font-size: 16px;
+        font-family: PingFangSC-regular;
+        border: none;
+        border-bottom: 1px solid rgba(199, 199, 204, 1);
+        outline: none;
+        background: none;
+        border-radius: none;
+    }
+    .agreement {
+        display: flex;
+        margin: 9.95px 0 10px 60.38px;
+    }
+    .agreement input {
+        width: 15px;
+        height: 15px;
+        background-color: rgba(255,255,255,1);
+        box-shadow: 0px 2px 6px 0px rgba(233,78,69,0.87);
+        border: 1px solid rgba(206,206,206,1);
+        outline: none;
+        border-radius: none;
+        margin-right: 2.23px;
+    }
+    .agreement span {
+        color: rgb(199, 199, 204);
+        font-size: 12px;
+        font-family: PingFangSC-regular;
+    }
+    .agreement .agreement_list p {
+        color: rgb(233, 78, 69);
+        font-size: 12px;
+        font-family: PingFangSC-regular;
+        text-align: right;
+    }
+    .agreement .agreement_list p:first-child {
+        margin-bottom: 10px;
+    }
+</style>
+<div class="main_register" id="main_register">
+  <div class="sign_up_by_phone">
+    <img class="logo" src="/assets/logo.png" alt="">
+    <img class="title" src="/assets/title.png" alt="">
+    <a href="javascript:void(0);" onclick="history.back();">
+      <div class="return">
+        <img class="icon_arrow_left" src="/assets/icon_arrow_left.png" alt="">
+        <span>返回</span>
+      </div>
+    </a>
+    <h1>注册账户</h1>
+    <form method="POST">
+      <input class="email" type="number" placeholder="请输入电话" disabled="disabled" />
+      <div class="name">
+        <input name="phone" type="text" placeholder="请输入电话" autofocus>
+      </div>
+      <input class="btn_next" type="submit" value="同意协议并注册" >
+      <div class="agreement">
+        <input type="checkbox">
+        <span>我已阅读并同意：</span>
+        <div class="agreement_list">
+          <p>CODEMATE软件服务协议</span>
+          <p>用户隐私协议</p>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

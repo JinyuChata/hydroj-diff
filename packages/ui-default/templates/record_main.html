@@ -10,14 +10,33 @@
   + ("&allDomain=1" if allDomain else "")
 ) }}
 {{ set(UiContext, 'rids', rdocs.map(eval("rdoc=>rdoc._id.toString()"))) }}
+
+
+<div class="title" style="margin: 10px 0 10px 0">
+  <div style="display: flex; height: 50px; line-height: 50px" class="w">
+    <div style="font-size: 20px; font-weight: 700; margin-left: 30px;position: relative;">
+      CODEMATE
+      <div class="titleBorder"></div>
+    </div>
+    <span
+            style="
+              font-size: 20px;
+              color: #333;
+              margin-left: 15px;
+              font-weight: 400;
+            "
+    >评测队列</span>
+  </div>
+</div>
 <div class="row">
+
   <div class="medium-12 columns">
     <form method="get">
       <div class="section">
         <div class="section__header">
-          <h1 class="section__title">{{ _('Filter') }}</h1>
+          <h1 class="section__title" style="color: #ff7d37;">【选项】</h1>
           <div class="section__tools">
-            <button type="submit" class="primary button"><span class="icon icon-filter"></span> {{ _('Filter') }}</button>
+            <button type="submit" class="button" style="background-color: #ff7d37; color: #FFFFFF"><span class="icon icon-filter"></span> {{ _('Filter') }}</button>
             <a href="{{ url('record_main') }}" class="button">{{ _('Reset') }}</a>
           </div>
         </div>
@@ -121,7 +140,7 @@
     {% if statistics %}
     <div class="section">
       <div class="section__header">
-        <h1 class="section__title">{{ _('Statistics') }}</h1>
+        <h1 class="section__title" style="color: #ff7d37;">【评测总量】</h1>
       </div>
       <div class="section__body">
         <dl class="large horizontal">

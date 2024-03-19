@@ -1,0 +1,6 @@
+.edit-btn-bar {
+  margin: 10px 0;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 20px;
+}

@@ -30,6 +30,93 @@ export const RpTypes: Record<string, RpDef> = {
     problem: {
         async run(domainIds, udict, report) {
             const problems = await problem.getMulti('', { domainId: { $in: domainIds }, nAccept: { $gt: 0 }, hidden: false }).toArray();
+            console.log("PROBLEMS")
+            console.log(problems)
+            if (problems.length) await report({ message: `Found ${problems.length} problems in ${domainIds[0]}` });
+            for (const pdoc of problems) {
+                const cursor = problem.getMultiStatus(
+                    pdoc.domainId,
+                    {
+                        docId: pdoc.docId,
+                        rid: { $ne: null },
+                        uid: { $ne: pdoc.owner },
+                        score: { $gt: 0 },
+                    },
+                );
+                const difficulty = +pdoc.difficulty || difficultyAlgorithm(pdoc.nSubmit, pdoc.nAccept) || 5;
+                const p = difficulty / 100;
+                let psdoc;
+                while (psdoc = await cursor.next()) {
+                    udict[psdoc.uid] += min(psdoc.score, 100) * p;
+                }
+            }
+            for (const key in udict) udict[key] = max(0, min(udict[key], log(udict[key]) / log(1.03)));
+        },
+        hidden: false,
+        base: 0,
+    },
+    // zjy-test: by tag(coci)
+    problem_python: {
+        async run(domainIds, udict, report) {
+            const problems = await problem.getMulti('', { domainId: { $in: domainIds }, nAccept: { $gt: 0 },
+                hidden: false, tag: {$in: ['Python', 'python']} }).toArray();
+            console.log("PROBLEMS_PY")
+            if (problems.length) await report({ message: `Found ${problems.length} problems in ${domainIds[0]}` });
+            for (const pdoc of problems) {
+                const cursor = problem.getMultiStatus(
+                    pdoc.domainId,
+                    {
+                        docId: pdoc.docId,
+                        rid: { $ne: null },
+                        uid: { $ne: pdoc.owner },
+                        score: { $gt: 0 },
+                    },
+                );
+                const difficulty = +pdoc.difficulty || difficultyAlgorithm(pdoc.nSubmit, pdoc.nAccept) || 5;
+                const p = difficulty / 100;
+                let psdoc;
+                while (psdoc = await cursor.next()) {
+                    udict[psdoc.uid] += min(psdoc.score, 100) * p;
+                }
+            }
+            for (const key in udict) udict[key] = max(0, min(udict[key], log(udict[key]) / log(1.03)));
+        },
+        hidden: false,
+        base: 0,
+    },
+    problem_cpp: {
+        async run(domainIds, udict, report) {
+            const problems = await problem.getMulti('', { domainId: { $in: domainIds }, nAccept: { $gt: 0 },
+                hidden: false, tag: {$in: ['C++', 'CPP', "cpp", 'c++']} }).toArray();
+            console.log("PROBLEMS_CPP")
+            if (problems.length) await report({ message: `Found ${problems.length} problems in ${domainIds[0]}` });
+            for (const pdoc of problems) {
+                const cursor = problem.getMultiStatus(
+                    pdoc.domainId,
+                    {
+                        docId: pdoc.docId,
+                        rid: { $ne: null },
+                        uid: { $ne: pdoc.owner },
+                        score: { $gt: 0 },
+                    },
+                );
+                const difficulty = +pdoc.difficulty || difficultyAlgorithm(pdoc.nSubmit, pdoc.nAccept) || 5;
+                const p = difficulty / 100;
+                let psdoc;
+                while (psdoc = await cursor.next()) {
+                    udict[psdoc.uid] += min(psdoc.score, 100) * p;
+                }
+            }
+            for (const key in udict) udict[key] = max(0, min(udict[key], log(udict[key]) / log(1.03)));
+        },
+        hidden: false,
+        base: 0,
+    },
+    problem_scratch: {
+        async run(domainIds, udict, report) {
+            const problems = await problem.getMulti('', { domainId: { $in: domainIds }, nAccept: { $gt: 0 },
+                hidden: false, tag: {$in: ['scratch', 'Scratch']} }).toArray();
+            console.log("PROBLEMS_Scratch")
             if (problems.length) await report({ message: `Found ${problems.length} problems in ${domainIds[0]}` });
             for (const pdoc of problems) {
                 const cursor = problem.getMultiStatus(
@@ -142,6 +229,7 @@ async function runInDomain(domainId: string, report: Function) {
     const udict = Counter();
     await db.collection('domain.user').updateMany({ domainId }, { $set: { rpInfo: {} } });
     for (const type in RpTypes) {
+        console.log("runin domain for type...")
         results[type] = new Proxy({}, { get: (self, key) => self[key] || RpTypes[type].base });
         await RpTypes[type].run(domainIds, results[type], report);
         const bulk = db.collection('domain.user').initializeUnorderedBulkOp();
@@ -149,6 +237,7 @@ async function runInDomain(domainId: string, report: Function) {
             const udoc = await UserModel.getById(domainId, +uid);
             if (!udoc?.hasPriv(PRIV.PRIV_USER_PROFILE)) continue;
             bulk.find({ domainId, uid: +uid }).updateOne({ $set: { [`rpInfo.${type}`]: results[type][uid] } });
+            if (type.startsWith("problem_")) continue;
             udict[+uid] += results[type][uid];
         }
         if (bulk.batches.length) await bulk.execute();
@@ -163,6 +252,7 @@ async function runInDomain(domainId: string, report: Function) {
 }
 
 export async function run({ domainId }, report: Function) {
+    console.log("rp start!")
     if (!domainId) {
         const domains = await domain.getMulti().toArray();
         await report({ message: `Found ${domains.length} domains` });

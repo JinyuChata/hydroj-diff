@@ -21,6 +21,8 @@ import {
 } from '../service/server';
 import { log2 } from '../utils';
 import { registerResolver, registerValue } from './api';
+import {Sort} from "mongodb";
+import {randomBytes} from "node:crypto";
 
 registerValue('GroupInfo', [
     ['name', 'String!'],
@@ -69,6 +71,61 @@ class DomainRankHandler extends Handler {
         }
         udocs = await Promise.all(udocs);
         this.response.template = 'ranking.html';
+        this.response.body = {
+            udocs, upcount, ucount, page,
+        };
+    }
+}
+
+class DomainRankByHandler extends Handler {
+    @query('page', Types.PositiveInt, true)
+    @query('rankby', Types.String, true)
+    async get(domainId: string, page = 1, rankby: string = "") {
+        const sort_by = {}
+        if (rankby === "") sort_by['rp'] = -1;
+        else sort_by['rpInfo.'+rankby] = -1;
+
+        console.log("sort_by", sort_by)
+
+        const [dudocs, upcount, ucount] = await paginate(
+            domain.getMultiUserInDomain(domainId, { uid: { $gt: 1 }, rp: { $gt: 0 } }).sort(sort_by),
+            page,
+            100,
+        );
+        let udocs = [];
+        for (const dudoc of dudocs) {
+            udocs.push(user.getById(domainId, dudoc.uid));
+        }
+        udocs = await Promise.all(udocs);
+        this.response.template = 'ranking_by.html';
+        this.response.body = {
+            udocs, upcount, ucount, page,
+        };
+    }
+}
+
+class DomainRankByAPIHandler extends Handler {
+    @query('page', Types.PositiveInt, true)
+    @query('rankby', Types.String, true)
+    async get(domainId: string, page = 1, rankby: string = "") {
+        const sort_by = {}
+        if (rankby === "") sort_by['rp'] = -1;
+        else sort_by['rpInfo.'+rankby] = -1;
+
+        console.log("sort_by", sort_by)
+
+        const [dudocs, upcount, ucount] = await paginate(
+            domain.getMultiUserInDomain(domainId, { uid: { $gt: 1 }, rp: { $gt: 0 } }).sort(sort_by),
+            page,
+            100,
+        );
+        let udocs = [];
+        for (const dudoc of dudocs) {
+            udocs.push(user.getById(domainId, dudoc.uid));
+        }
+        udocs = await Promise.all(udocs);
+        console.log(udocs)
+
         this.response.body = {
             udocs, upcount, ucount, page,
         };
@@ -307,9 +364,24 @@ class DomainUserGroupHandler extends ManageHandler {
     @param('name', Types.Name)
     @param('uids', Types.NumericArray)
     async postUpdate(domainId: string, name: string, uids: number[]) {
+        console.log('12313214', uids)
+        if (uids.length > 0 && uids[0] === -10) {
+            uids.shift(); // 移除数组的第一个元素
+            // 获取所有组
+            const groups = await user.listGroup(domainId);
+            console.log("groups", groups);
+            // 找到名字为name的组
+            const group = groups.find(g => g.name === name);
+
+            if (group) {
+                // 合并原本的uids和传入的uids
+                uids = Array.from(new Set([...group.uids, ...uids]));
+            }
+        }
         await user.updateGroup(domainId, name, uids);
         this.back();
     }
+
 }
 
 class DomainJoinHandler extends Handler {
@@ -364,6 +436,8 @@ class DomainSearchHandler extends Handler {
 
 export async function apply(ctx: Context) {
     ctx.Route('ranking', '/ranking', DomainRankHandler, PERM.PERM_VIEW_RANKING);
+    ctx.Route('ranking_by', '/ranking_by', DomainRankByHandler, PERM.PERM_VIEW_RANKING);
+    ctx.Route('ranking_by_api', '/api/ranking_by', DomainRankByAPIHandler, PERM.PERM_VIEW_RANKING);
     ctx.Route('domain_dashboard', '/domain/dashboard', DomainDashboardHandler);
     ctx.Route('domain_edit', '/domain/edit', DomainEditHandler);
     ctx.Route('domain_user', '/domain/user', DomainUserHandler);

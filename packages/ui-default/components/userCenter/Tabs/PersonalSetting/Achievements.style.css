@@ -1,0 +1,130 @@
+.ach-item-card {
+  margin-top: 20px;
+
+  width: 100%;
+  padding: 26px 32px;
+  border: 1px solid #f1f1f1;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: row;
+
+  .card-left-main {
+    flex: 1;
+
+    .card-top {
+      display: flex;
+      flex-direction: row;
+      gap: 30px;
+
+      .card-top-title {
+        margin-bottom: 17px;
+
+        .card-title-text {
+          display: flex;
+          flex-direction: row;
+          gap: 8px;
+          > * {
+            display: block;
+          }
+
+          .text-content {
+            font-family: Microsoft YaHei;
+            font-size: 16px;
+            font-weight: normal;
+            line-height: normal;
+            letter-spacing: 0em;
+
+            font-feature-settings: "kern" on;
+            color: #797979;
+          }
+          .tooltip-icon {
+            svg {
+              width: 16px;
+              height: 16px;
+            }
+          }
+        }
+
+        .points-value {
+          font-family: Microsoft YaHei;
+          font-size: 34px;
+          font-weight: bold;
+          line-height: normal;
+          letter-spacing: 0em;
+
+          font-variation-settings: "opsz" auto;
+          font-feature-settings: "kern" on;
+          color: #ff7d37;
+        }
+
+        .rank-value {
+          font-variation-settings: "opsz" auto;
+          font-feature-settings: "kern" on;
+          color: #3d3d3d;
+          .level-prefix {
+            font-family: Microsoft YaHei;
+            font-weight: 700;
+            font-size: 16;
+            font-variation-settings: "opsz" auto;
+          }
+          .level-value {
+            font-family: Microsoft YaHei;
+            font-weight: 700;
+            font-size: 34;
+            font-variation-settings: "opsz" auto;
+          }
+        }
+
+        .role-value {
+          margin-top: 17px;
+
+          font-family: Microsoft YaHei;
+          font-size: 34px;
+          font-weight: bold;
+          line-height: normal;
+          letter-spacing: 0em;
+
+          font-variation-settings: "opsz" auto;
+          font-feature-settings: "kern" on;
+          color: #3d3d3d;
+        }
+      }
+    }
+
+    .card-progress-bar {
+      .progress-text {
+        margin-top: 10px;
+
+        font-family: Microsoft YaHei;
+        font-size: 12px;
+        font-weight: normal;
+        line-height: normal;
+        letter-spacing: 0em;
+
+        font-feature-settings: "kern" on;
+        color: #797979;
+      }
+    }
+
+    .card-action-button {
+      margin-top: 17px;
+    }
+  }
+
+  .card-right-icon {
+    margin-left: 65px;
+
+    width: 120px;
+
+    > img {
+      width: 100%;
+      height: fit-content;
+    }
+
+    > svg {
+      width: 123px;
+      height: 109px;
+    }
+  }
+}

@@ -1,0 +1,68 @@
+.top-alarm {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  border-radius: 8px;
+
+  padding: 20px 18px;
+  margin-bottom: 30px;
+
+  &.unauthorized {
+    background: rgba(206, 17, 38, 0.12);
+
+    > span {
+      color: #ce1126;
+    }
+  }
+
+  &.authorized {
+    background: rgba(255, 125, 55, 0.0588);
+    > span {
+      color: #ff7d37;
+    }
+  }
+
+  > svg {
+    width: 20px;
+    height: 20px;
+
+    margin-right: 12px;
+  }
+
+  > span {
+    font-family: Microsoft YaHei;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-feature-settings: "kern" on;
+  }
+}
+
+.authorize-result-modal {
+  font-family: Source Han Sans;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 32px;
+  letter-spacing: 0px;
+
+  font-variation-settings: "opsz" auto;
+  font-feature-settings: "kern" on;
+  color: #3d3d3d;
+
+  .greeting-title {
+    font-family: Source Han Sans;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 48px;
+    letter-spacing: 0px;
+
+    font-variation-settings: "opsz" auto;
+    font-feature-settings: "kern" on;
+    color: #3d3d3d;
+  }
+}

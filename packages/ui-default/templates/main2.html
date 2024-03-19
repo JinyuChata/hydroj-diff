@@ -1,0 +1,473 @@
+{% set page_name = "homepage" %}
+{% import "components/contest.html" as contest with context %}
+{% import "components/problem.html" as problem with context %}
+{% import "components/user.html" as user with context %}
+
+{% block content %}
+<head>
+  <meta charset="UTF-8"/>
+  <title>Vue + Element UI Example</title>
+  <!-- 引入 Vue.js -->
+  <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+  <!-- 引入 Element UI 样式 -->
+  <link
+          rel="stylesheet"
+          href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+  />
+  <!-- 引入 Element UI JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+  <!-- 引入样式 -->
+  <link
+          rel="stylesheet"
+          href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+  />
+</head>
+<body>
+<div id="root">
+  <header>
+    <div class="w header">
+      <img src="./assets/img/logo.png" id="logo" alt=""/>
+      <div class="header-center">
+        <ul>
+          <li>告示墙</li>
+          <li class="liActive">修炼场</li>
+          <li>竞技场</li>
+          <li>封神榜</li>
+          <li>觉醒台</li>
+        </ul>
+      </div>
+      <div class="header-right">
+        <el-input
+                style="width: 200px; margin-right: 30px"
+                placeholder="请输入内容"
+        >
+        </el-input>
+        <div class="Avatar">
+          <img
+                  src="./assets/img/Avatar.jpg"
+                  alt=""
+                  style="width: 40px; height: 40px"
+          />
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- 轮播图 -->
+  <div>
+    <el-carousel :interval="5000" arrow="always" height="300px">
+      <el-carousel-item class="el-carousel__item" v-for="item in carouselItems" :key="item.id">
+        <img :src="item.imageUrl" class="carousel-image" alt="轮播图">
+      </el-carousel-item>
+    </el-carousel>
+  </div>
+  <!-- 标题 -->
+  <div class="title">
+    <div style="display: flex; height: 50px; line-height: 50px" class="w">
+      <div>CODEMATE</div>
+      <span
+              style="
+              font-size: 20px;
+              color: #333;
+              margin-left: 20px;
+              font-weight: bold;
+            "
+      >修炼场</span
+      >
+    </div>
+  </div>
+  <div class="bottom w" style="display: flex">
+    <div class="bottomLeft" style="width: 200px">
+      <div
+              calss="
+             tabs"
+              style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0 15px;
+              box-sizing: border-box;
+              width: 161px;
+              height: 51px;
+              line-height: 51px;
+              background-color: #ff7d37;
+              color: #fff;
+              font-size: 14px;
+              margin-top: 15px;
+            "
+      >
+        <div>选择语言</div>
+        <div>
+          <i class="iconfont el-icon-caret-right"></i>
+        </div>
+      </div>
+      <div
+              calss="tabs"
+              style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0 15px;
+              box-sizing: border-box;
+              width: 161px;
+              height: 51px;
+              line-height: 51px;
+              background-color: #f7f5f5;
+              font-size: 14px;
+            "
+      >
+        <div>图形化</div>
+        <div>
+          <i class="iconfont el-icon-caret-right"></i>
+        </div>
+      </div>
+      <div
+              calss="tabs"
+              style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0 15px;
+              box-sizing: border-box;
+              width: 161px;
+              height: 51px;
+              line-height: 51px;
+              background-color: #f7f5f5;
+              font-size: 14px;
+            "
+      >
+        <div>C++</div>
+        <div>
+          <i class="iconfont el-icon-caret-right"></i>
+        </div>
+      </div>
+      <div
+              calss="tabs"
+              style="
+              display: flex;
+              justify-content: space-between;
+              padding: 0 15px;
+              box-sizing: border-box;
+              width: 161px;
+              height: 51px;
+              line-height: 51px;
+              background-color: #f7f5f5;
+              font-size: 14px;
+            "
+      >
+        <div>Python</div>
+        <div>
+          <i class="iconfont el-icon-caret-right"></i>
+        </div>
+      </div>
+    </div>
+    <div class="bottomCenter" style="margin: 0 30px">
+      <el-tabs>
+        <el-tab-pane label="赛事库题" name="">
+          <ul style="display: flex; margin: 20px 0">
+            <li
+                    style="margin-right: 20px; font-size: 16px; font-weight: bold"
+            >
+              大湾区比赛
+            </li>
+            <li
+                    style="
+                    margin-right: 20px;
+                    font-size: 16px;
+                    font-weight: normal;
+                    color: #797979;
+                  "
+                    class="liActive"
+            >
+              xxx比赛
+            </li>
+            <li
+                    style="
+                    margin-right: 20px;
+                    font-size: 16px;
+                    font-weight: normal;
+                    color: #797979;
+                  "
+            >
+              NOIP
+            </li>
+            <li
+                    style="
+                    margin-right: 20px;
+                    font-size: 16px;
+                    font-weight: normal;
+                    color: #797979;
+                  "
+            >
+              NOI
+            </li>
+            <li
+                    style="
+                    margin-right: 20px;
+                    font-size: 16px;
+                    font-weight: normal;
+                    color: #797979;
+                  "
+            >
+              其他
+            </li>
+          </ul>
+          <el-table :data="tableData" style="width: 100%">
+            <el-table-column prop="code" label="编号" width="100"></el-table-column>
+            <el-table-column prop="name" label="题目名称" width="300">
+              <template slot-scope="scope">
+                <div>
+                  <h2>{{ '{{' }} scope.row.name {{ '}}' }}</h2>
+                  <div style="color: #797979">
+                    【标题描述】巴拉拉小魔仙是一个怎样 的故事呢
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="label" label="算法标签" width="280">
+              <template slot-scope="scope">
+                <div>
+                  <el-tag
+                          type="warning"
+                          style="margin: 0 10px; padding: 0 10px"
+                          v-for="(item, index) in scope.row.labels" :key="index"
+                  >{{ '{{' }} item {{ '}}' }}
+                  </el-tag>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="difficulty" label="难度" width="100">
+            </el-table-column>
+            <el-table-column prop="submit" label="尝试" width="100">
+            </el-table-column>
+            <el-table-column prop="acrate" label="AC率" width="100">
+            </el-table-column>
+            <el-table-column prop="hot" width="180" label="热度">
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="GESP考级" name="second">GESP考级</el-tab-pane>
+        <el-tab-pane label="电子学会" name="third">电子学会</el-tab-pane>
+        <el-tab-pane label="蓝桥环" name="fourth">蓝桥环</el-tab-pane>
+        <el-tab-pane label="按标签筛选" name="fonv">按标签筛选</el-tab-pane>
+      </el-tabs>
+    </div>
+    <div class="bottomRight" style="width: 300px">
+      <el-collapse v-model="activeNames">
+        <el-collapse-item name="1">
+          <template slot="title">
+            <div style="display: flex; align-items: center">
+              <div
+                      style="
+                      width: 4px;
+                      background-color: #ff7d37;
+                      height: 18px;
+                      margin: 10px;
+                    "
+              ></div>
+              <span>重要公告</span>
+            </div>
+          </template>
+          <div style="padding: 10px">
+            可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁。
+          </div>
+          <div style="padding: 10px">
+            可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁。
+          </div>
+        </el-collapse-item>
+        <el-collapse-item name="2">
+          <template slot="title">
+            <div style="display: flex; align-items: center">
+              <div
+                      style="
+                      width: 4px;
+                      background-color: #ff7d37;
+                      height: 18px;
+                      margin: 10px;
+                    "
+              ></div>
+              <span>重要公告</span>
+            </div>
+          </template>
+          <div style="padding: 10px">
+            可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁。
+          </div>
+          <div style="padding: 10px">
+            可以折叠/展开的内容区域，用于对复杂区域进行分组和隐藏，保持页面的整洁。
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+    </div>
+  </div>
+</div>
+
+<script>
+    {% set pdocs = firstpages['recent_problems'][0] %}
+    {% set pdocs_tag = firstpages['recent_problems_tags'] %}
+
+    new Vue({
+        el: '#root',
+        data() {
+            return {
+                carouselItems: [
+                    { id: 1, imageUrl: "{{ UiContext.cdn_prefix }}img/lunbotu/lunbotu.jpg" },
+                    { id: 2, imageUrl: "{{ UiContext.cdn_prefix }}img/lunbotu/lunbotu.jpg" },
+                    { id: 3, imageUrl: "{{ UiContext.cdn_prefix }}img/lunbotu/lunbotu.jpg" },
+                    { id: 4, imageUrl: "{{ UiContext.cdn_prefix }}img/lunbotu/lunbotu.jpg" },
+                ],
+                tableData: [
+                    {
+                        code: 'P00001',
+                        name: '100%',
+                        label: '100%',
+                        difficulty: '入门',
+                        attempt: '985',
+                        AC: '100%',
+                        hot: '🔥🔥🔥🔥🔥🔥',
+                    }
+                ],
+                activeNames: ['1', '2'],
+                tableData: [
+                {%- for pdoc in pdocs -%}
+                  {
+                      code: '{{ pdoc.pid }}',
+                      name: '{{ pdoc.title }}',
+                      difficulty: '{{ pdoc.difficulty }}',
+                      accept: '{{ pdoc.nAccept }}',
+                      submit: '{{ pdoc.nSubmit }}',
+                      acrate: {{ pdoc.nSubmit }} != 0 ? Math.floor(({{ pdoc.nAccept }} / {{ pdoc.nSubmit }})*100)+"%" : "0%",
+                      labels: [
+                      {%- for lb in pdoc.tag -%}
+                      '{{ lb }}',
+                      {%- endfor -%}
+                      ],
+                      hot: '🔥🔥🔥🔥',
+                  },
+                    {%- endfor -%}
+                ],
+            };
+        },
+    });
+</script>
+</body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-size: 16px;
+        font-family: 'PingFang-SC-Regular';
+        list-style: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    body {
+        background: #fff;
+        padding: 10px;
+    }
+
+    /* 版心 */
+    .w {
+        width: 1680px;
+        margin: 0 auto;
+    }
+
+    header {
+        background-color: #fff;
+    }
+
+    header .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .header #logo {
+        height: 75px;
+    }
+
+    .header-center {
+        flex: 1;
+        margin-left: 130px;
+    }
+
+    .header-center ul {
+        display: flex;
+    }
+
+    .header-center ul li {
+        margin: 0 30px;
+        position: relative;
+        height: 35px;
+        line-height: 35px;
+        cursor: pointer;
+    }
+
+    .liActive {
+        color: #ff7d37;
+        font-weight: 600;
+    }
+
+    .header-center ul .liActive::before {
+        content: ''; /* 必须有内容才能显示伪元素 */
+        position: absolute;
+        left: 50%;
+        bottom: 0; /* 放在底部 */
+        width: 50%; /* 宽度等于父元素宽度 */
+        border-bottom: 3px solid #ff7d37; /* 边框样式不变 */
+        transform: translateX(-50%); /* 将元素向左移动自身宽度的一半，实现居中 */
+    }
+
+    .header-right {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .header-right .Avatar img {
+        border-radius: 50%;
+    }
+
+    .header-right .inputBox {
+        background-color: #fff;
+        padding: 5px 10px;
+        width: 100px;
+        margin: 0 20px;
+        border: 1px solid #ccc;
+        font-size: 12px;
+    }
+
+    .header-right input {
+        border: none;
+        outline: none;
+        font-size: 12px;
+        width: 100%;
+    }
+
+    .el-tabs__item:hover {
+        color: #ff7d37;
+        cursor: pointer;
+    }
+
+    .is-active {
+        color: #ff7d37 !important;
+    }
+
+    .el-tabs__active-bar {
+        background-color: #ff7d37;
+    }
+
+    .el-collapse {
+        border-top: none;
+    }
+
+    .el-carousel__item h3 {
+        color: #d8d8d8;
+        font-size: 14px;
+        opacity: 0.75;
+        line-height: 200px;
+        margin: 0;
+    }
+
+</style>
+{% endblock %}

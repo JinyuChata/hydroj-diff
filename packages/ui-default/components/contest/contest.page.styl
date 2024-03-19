@@ -18,6 +18,24 @@
 
   .icon
     margin-right: rem(5px)
+.contest-tag-tagged
+  font-size: rem($font-size-small)
+  display: inline-block
+  line-height: rem(22px)
+  padding: rem(0 10px)
+  vertical-align: middle
+  border-radius: rem(12px)
+
+  &:hover
+    text-decoration: none
+    color: #FFF !important
+
+.contest-tag-tagged
+  background: grey
+  color: #FFF
+
+  .icon
+    margin-right: rem(5px)
 
 .contest-type-tag
   &, &:visited
@@ -110,3 +128,317 @@ for key, value in $contest-color
       
       &:hover .icon
         display: none;
+
+
+* {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      list-style: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+    .has-gutter {
+      background-color: #f9f9f9 !important;
+    }
+
+    #root {
+      background: #fff;
+      padding-top: 75px;
+    }
+
+    /* 版心 */
+    .w {
+      width: 1280px;
+      margin: 0 auto;
+    }
+
+    // header {
+    //   background-color: #fff;
+    //   position: fixed;
+    //   top: 0;
+    //   width: 100%;
+    //   z-index: 99999;
+    //   height: 75px;
+    // }
+
+    header .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header #logo {
+      height: 75px;
+    }
+
+    .header-center {
+      flex: 1;
+      margin-left: 130px;
+    }
+
+    .header-center ul {
+      display: flex;
+    }
+
+    .header-center ul li {
+     margin: 0 3px;
+      position: relative;
+      height: 35px;
+      line-height: 35px;
+    }
+
+    .liActive {
+      color: #ff7d37;
+      font-weight: 600;
+    }
+
+    .header-center ul .liActive::before {
+      content: '';
+      /* 必须有内容才能显示伪元素 */
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      /* 放在底部 */
+      width: 50%;
+      /* 宽度等于父元素宽度 */
+      border-bottom: 3px solid #ff7d37;
+      /* 边框样式不变 */
+      transform: translateX(-50%);
+      /* 将元素向左移动自身宽度的一半，实现居中 */
+    }
+
+    .header-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .header-right .Avatar img {
+      border-radius: 50%;
+    }
+
+    .header-right .inputBox {
+      background-color: #fff;
+      padding: 5px 10px;
+      width: 100px;
+      margin: 0 20px;
+      border: 1px solid #ccc;
+      font-size: 12px;
+    }
+
+    .header-right input {
+      border: none;
+      outline: none;
+      font-size: 12px;
+      width: 100%;
+    }
+
+    .el-tabs__item:hover {
+      color: #ff7d37;
+    }
+
+    .is-active {
+      color: #ff7d37 !important;
+    }
+
+    .el-tabs__active-bar {
+      background-color: #ff7d37;
+    }
+
+    .el-collapse {
+      border-top: none;
+    }
+
+    .el-carousel__item h3 {
+      color: #d8d8d8;
+      font-size: 14px;
+      opacity: 0.75;
+      line-height: 200px;
+      margin: 0;
+    }
+
+    .footer {
+      display: flex;
+      padding-top: 40px;
+    }
+
+    .footer-right {
+      display: flex;
+      justify-content: space-between;
+      flex: 1;
+      margin-left: 90px;
+      font-size: 16px;
+    }
+
+    .footer-right .rightItem {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .footer-right .rightItem p {
+      color: #000;
+    }
+
+    .footer-right .rightItem div {
+      margin-top: 10px;
+      color: #797979;
+    }
+
+    .tabsAll {
+      position: fixed;
+      /* 居中靠左 */
+      left: 0;
+      top: 50%;
+    }
+
+    .tabs {
+      /* 矩形 42 */
+      width: 153px;
+      height: 60px;
+      border-radius: 0px 40px 40px 0px;
+      opacity: 1;
+      background: #ff7d37;
+      box-shadow: 4px 2px 10px 0px #fff0e7;
+      z-index: 1000;
+      margin-top: 8px;
+    }
+
+    .el-table th.el-table__cell > .cell {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .el-tabs__item {
+      font-size: 18px;
+    }
+
+    .titleBorder {
+      position: absolute;
+      top: 33px;
+      width: 114px;
+      height: 4px;
+      opacity: 1;
+      background: #ff7d37;
+    }
+
+    .el-pager li.active {
+      color: #ff7d37;
+      cursor: default;
+    }
+
+    .el-pager li:hover {
+      color: #ff7d37;
+      cursor: default;
+    }
+
+    .paginationRoot {
+      display: flex;
+      width: 100%;
+      margin-top: 30px;
+      align-items: center;
+      color: #3d3d3d;
+      justify-content: center;
+    }
+
+    .backPage {
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .nextPage {
+      font-size: 14px;
+      font-weight: 400;
+    }
+    .bottomLeft-item {
+      width: 161px;
+      height: 51px;
+      opacity: 1;
+      line-height: 51px;
+      background: #f7f5f5;
+      display: flex;
+      padding: 0 20px;
+      box-sizing: border-box;
+      justify-content: space-between;
+    }
+    .bottomLeft-itemActive {
+      width: 161px;
+      height: 51px;
+      opacity: 1;
+      line-height: 51px;
+      display: flex;
+      padding: 0 20px;
+      box-sizing: border-box;
+      justify-content: space-between;
+      background: #ff7d37;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .centerItem {
+      width: 100%;
+      height: 180px;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 60px;
+    }
+    .centerItem-left {
+      width: 300px;
+      height: 180px;
+      background-color: #eeeeee;
+      margin-right: 27px;
+    }
+    .centerItem-right {
+      flex: 1;
+      height: 180px;
+    }
+    .centerItem-right .rightTitle {
+      display: flex;
+      justify-content: space-between;
+    }
+    .centerItem-right .rightTitle .rightTile-Tag {
+      width: 80px;
+      height: 30px;
+      border-radius: 100px 0px 0px 100px;
+      font-size: 14px;
+      font-weight: 400;
+      opacity: 1;
+      background: #f1f1f1;
+      text-align: center;
+      line-height: 30px;
+    }
+    .centerItem-right .rightContent {
+      display: flex;
+      margin-top: 17px;
+      margin-bottom: 20px;
+      font-weight: 400;
+      font-size: 16px;
+    }
+
+    .centerItem-right .rightBottom {
+      display: flex;
+      justify-content: space-between;
+      height: 50px;
+      align-items: center;
+    }
+    .centerItem-right .rightBottom .bottomTime {
+      font-size: 14px !important;
+      font-family: Microsoft YaHei;
+    }
+    .centerItem-right .rightBottom .viewDeatil {
+      width: 84px;
+      height: 33px;
+      line-height: 33px;
+      border-radius: 8px;
+      text-align: center;
+      opacity: 1;
+      color: #fff;
+      background: #ff7d37;
+      font-size: 14px !important;
+      font-family: Microsoft YaHei;
+    }

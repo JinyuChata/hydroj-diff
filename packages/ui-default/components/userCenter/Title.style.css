@@ -1,0 +1,31 @@
+.codemate-title-container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 25px;
+
+  .codemate-title {
+    position: relative;
+
+    > p {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .title-border {
+      z-index: -1;
+
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 4px;
+      opacity: 1;
+      background: #ff7d37;
+    }
+  }
+  .title-text {
+    font-size: 20px;
+    color: #333;
+    margin-left: 15px;
+    font-weight: 400;
+  }
+}

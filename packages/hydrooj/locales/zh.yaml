@@ -92,8 +92,11 @@ Avatar: 头像
 Back to contest list: 返回比赛列表
 Be Copied: 被复制
 Begin at: 开始于
+Image URL: 图片链接
 Begin Date: 开始日期
+Checkin Begin Date: 报名开始日期
 Begin Time: 开始时间
+Checkin Begin Time: 报名开始时间
 Belongs to: 属于
 Bio Visibility: 个人简介可见性
 Bio: 个人简介
@@ -232,6 +235,7 @@ Delete Selected Roles: 删除所选角色
 delete: 删除
 Delete: 删除
 Description: 说明
+ImportantDescription: 重要说明
 Destination Domain: 目标域
 Development: 开发
 Difficulty Algorithm: 难度算法
@@ -316,7 +320,9 @@ Email: 电子邮件
 Enabled: 开启
 End at: 结束于
 End Date: 结束日期
+Checkin End Date: 报名结束日期
 End Time: 结束时间
+Checkin End Time: 报名结束时间
 EndPoint for judge: 提供给评测机的 EndPoint
 EndPoint for user: 提供给用户的 EndPoint
 Enroll Training: 参加训练
@@ -628,7 +634,7 @@ QQ Visibility: QQ 可见性
 Quit Scratchpad: 退出在线编程模式
 Quote: 引用
 Rank: 排名
-ranking: 排名
+ranking: 封神榜
 Read record codes after accept: 题目通过后读取记录的代码
 Recalculates nSubmit and nAccept in problem status.: 重新计算每道题目的 AC 量和提交量
 Recommended: 推荐
@@ -850,6 +856,7 @@ User can join this domain by visiting the following URL: 用户可以访问此�
 User ID: 用户 ID
 User will no longer be allowed to join the domain after expiration.: 过期后，用户将不能加入此域。
 user_detail: 用户
+user_center: 我的空间
 user_login: 登录
 user_logout: 登出
 user_lostpass: 忘记密码

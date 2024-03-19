@@ -167,7 +167,8 @@ export class User {
 
     serialize(options) {
         if (!this._isPrivate) {
-            const fields = ['_id', 'uname', 'mail', 'perm', 'role', 'priv', 'regat', 'loginat', 'tfa', 'authn'];
+            const fields = ['_id', 'uname', 'mail', 'perm', 'role', 'priv', 'regat', 'loginat', 'tfa', 'authn',
+                'rp', 'rpInfo', 'rank', 'nAccept', 'nSubmit', 'bio'];
             if (options.showDisplayName) fields.push('displayName');
             return pick(this, fields);
         }
@@ -447,12 +448,27 @@ class UserModel {
         return groups;
     }
 
+
     static delGroup(domainId: string, name: string) {
         deleteUserCache(domainId);
         return collGroup.deleteOne({ domainId, name });
     }
 
-    static updateGroup(domainId: string, name: string, uids: number[]) {
+    static async updateGroup(domainId: string, name: string, uids: number[]) {
+        console.log('12313214', uids)
+        if (uids.length > 0 && uids[0] === -10) {
+            uids.shift(); // 移除数组的第一个元素
+            // 获取所有组
+            const groups = await UserModel.listGroup(domainId);
+            console.log("groups", groups);
+            // 找到名字为name的组
+            const group = groups.find(g => g.name === name);
+
+            if (group) {
+                // 合并原本的uids和传入的uids
+                uids = Array.from(new Set([...group.uids, ...uids]));
+            }
+        }
         deleteUserCache(domainId);
         return collGroup.updateOne({ domainId, name }, { $set: { uids } }, { upsert: true });
     }

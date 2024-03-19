@@ -13,7 +13,8 @@
   {% endif %}
   <div class="slideout-overlay"></div>
   {% if UserContext %}{% include "partials/header_mobile.html" %}{% endif %}
-  <div class="main">
+  <div class="main" style="background: #FFFFFF">
+{#  <div>#}
     {% for item in ui.getNodes('Notification').concat(notification or []) %}{% if item.checker(handler) %}
       <div class="row typo"><blockquote class="{{ item.args.type }}">{{ _(item.name).format(item.args.args or [])|nl2br|safe }}</blockquote></div>
     {% endif %}{% endfor %}

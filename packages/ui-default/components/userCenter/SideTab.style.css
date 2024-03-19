@@ -1,0 +1,50 @@
+.side-tab-item {
+  cursor: pointer;
+
+  width: 161px;
+  height: 51px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  padding: 16px 20px;
+
+  background: #f7f5f5;
+
+  > span {
+    flex: 1;
+
+    font-family: Microsoft YaHei;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-feature-settings: "kern" on;
+    color: #3d3d3d;
+  }
+
+  > svg {
+    width: 5.55px;
+    height: 11.24px;
+  }
+
+  &.selected {
+    background: #ff7d37;
+    cursor: initial;
+
+    > span {
+      font-family: Microsoft YaHei;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: normal;
+      letter-spacing: 0em;
+
+      font-variation-settings: "opsz" auto;
+      font-feature-settings: "kern" on;
+      color: #ffffff;
+    }
+  }
+}

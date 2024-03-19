@@ -1,0 +1,10 @@
+.image-uploader-container {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+
+  .avatar-upload-preview {
+    width: 160;
+    height: 160px;
+  }
+}

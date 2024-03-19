@@ -1,92 +1,305 @@
-<div class="footer">
-  <div class="row"><div class="columns">
-  {% if show_topics|default(true) %}
-    <div class="row footer__links">
-      <div class="medium-3 large-2 columns footer__category expandable">
-        <h1>
-          {{ _('Status') }}
-          <span class="expand-icon">
-            <span class="icon icon-expand_more"></span>
-          </span>
-        </h1>
-        <div class="footer__category__expander"><ul class="footer__category__list">
-          <li class="footer__category__item"><a href="{{ url('record_main') }}">{{ _('Judging Queue') }}</a></li>
-          <li class="footer__category__item"><a href="{{ url('status') }}">{{ _('Service Status') }}</a></li>
-        </ul></div>
-      </div>
-      <div class="medium-3 large-2 columns footer__category expandable">
-        <h1>
-          {{ _('Development') }}
-          <span class="expand-icon">
-            <span class="icon icon-expand_more"></span>
-          </span>
-        </h1>
-        <div class="footer__category__expander"><ul class="footer__category__list">
-          <li class="footer__category__item"><a href="https://github.com/hydro-dev/Hydro" target="_blank">{{ _('Open Source') }}</a></li>
-          <li class="footer__category__item"><a href="{{ url('api') }}">{{ _('API') }}</a></li>
-        </ul></div>
-      </div>
-      <div class="medium-3 large-2 columns footer__category expandable end">
-        <h1>
-          {{ _('Support') }}
-          <span class="expand-icon">
-            <span class="icon icon-expand_more"></span>
-          </span>
-        </h1>
-        <div class="footer__category__expander"><ul class="footer__category__list">
-          <li class="footer__category__item"><a href="{{ url('wiki_help') }}">{{ _('Help') }}</a></li>
-          <!--<li class="footer__category__item"><a href="#">{{ _('Blog') }}</a></li>-->
-          <li class="footer__category__item"><a href="{{ url('wiki_about', anchor='contact') }}">{{ _('QQ Group') }}</a></li>
-        </ul></div>
-      </div>
-    </div>
-  {% endif %}
-    <div class="footer__extra-link clearfix">
-      <div class="footer__extra-left">
-        <ol class="clearfix">
-          <li class="footer__extra-link-item"><a href="{{ url('wiki_about') }}">{{ _('About') }}</a></li>
-          <li class="footer__extra-link-item"><a href="{{ url('wiki_about', anchor='contact') }}">{{ _('Contact Us') }}</a></li>
-          <li class="footer__extra-link-item"><a href="{{ url('wiki_about', anchor='privacy') }}">{{ _('Privacy') }}</a></li>
-          <li class="footer__extra-link-item"><a href="{{ url('wiki_about', anchor='tos') }}">{{ _('Terms of Service') }}</a></li>
-          <li class="footer__extra-link-item"><a href="{{ url('wiki_about', anchor='contact') }}">{{ _('Copyright Complaint') }}</a></li>
-          <li class="footer__extra-link-item nojs--hide" data-dropdown-target="#menu-footer-lang">
-            <span><span class="icon icon-global"></span> Language <span class="icon icon-expand_less"></span></span>
-            <ol class="dropdown-target menu" id="menu-footer-lang">
-            {%- for k, v in model.setting.SETTINGS_BY_KEY['viewLang'].range -%}
-              <li class="menu__item"><a class="menu__link" href="{{ url('switch_language', lang=k) }}">{{ v }}</a></li>
-            {%- endfor -%}
-            </ol>
-          </li>
-          <li class="footer__extra-link-item">
-            {% if handler.session.legacy %}
-              <a href="/legacy">{{ _('Standard mode') }}</a>
-            {% else %}
-              <a href="/legacy?legacy=true">{{ _('Legacy mode') }}</a>
-            {% endif %}
-          </li>
-          <li class="footer__extra-link-item nojs--hide" data-dropdown-target="#menu-footer-theme">
-            <span><span class="icon icon-global"></span> {{ _('Theme') }} <span class="icon icon-expand_less"></span></span>
-            <ol class="dropdown-target menu" id="menu-footer-theme">
-              <li class="menu__item"><a class="menu__link" href="{{ url('set_theme', theme='light') }}">{{ _('Light') }}</a></li>
-              <li class="menu__item"><a class="menu__link" href="{{ url('set_theme', theme='dark') }}">{{ _('Dark') }}</a></li>
-            </ol>
-          </li>
-        </ol>
-      </div>
-      <div class="footer__extra-right">
-        <ol class="clearfix">
-          {%- for html in (handler.domain.ui.footer_extra_html|default('')).split('\n') -%}
-            <li class="footer__extra-link-item">{{ html|safe }}</li>
-          {%- endfor -%}
+<div style="background: #fff;">
+{#  <div class="row"><div class="columns">#}
+{#  {% if show_topics|default(true) %}#}
+{#    <div class="row footer__links">#}
+{#      <div class="medium-3 large-2 columns footer__category expandable">#}
+{#        <h1>#}
+{#          {{ _('Status') }}#}
+{#          <span class="expand-icon">#}
+{#            <span class="icon icon-expand_more"></span>#}
+{#          </span>#}
+{#        </h1>#}
+{#        <div class="footer__category__expander"><ul class="footer__category__list">#}
+{#          <li class="footer__category__item"><a href="{{ url('record_main') }}">{{ _('Judging Queue') }}</a></li>#}
+{#          <li class="footer__category__item"><a href="{{ url('status') }}">{{ _('Service Status') }}</a></li>#}
+{#        </ul></div>#}
+{#      </div>#}
+{#      <div class="medium-3 large-2 columns footer__category expandable">#}
+{#        <h1>#}
+{#          {{ _('Development') }}#}
+{#          <span class="expand-icon">#}
+{#            <span class="icon icon-expand_more"></span>#}
+{#          </span>#}
+{#        </h1>#}
+{#        <div class="footer__category__expander"><ul class="footer__category__list">#}
+{#          <li class="footer__category__item"><a href="https://github.com/hydro-dev/Hydro" target="_blank">{{ _('Open Source') }}</a></li>#}
+{#          <li class="footer__category__item"><a href="{{ url('api') }}">{{ _('API') }}</a></li>#}
+{#        </ul></div>#}
+{#      </div>#}
+{#      <div class="medium-3 large-2 columns footer__category expandable end">#}
+{#        <h1>#}
+{#          {{ _('Support') }}#}
+{#          <span class="expand-icon">#}
+{#            <span class="icon icon-expand_more"></span>#}
+{#          </span>#}
+{#        </h1>#}
+{#        <div class="footer__category__expander"><ul class="footer__category__list">#}
+{#          <li class="footer__category__item"><a href="{{ url('wiki_help') }}">{{ _('Help') }}</a></li>#}
+{#          <!--<li class="footer__category__item"><a href="#">{{ _('Blog') }}</a></li>-->#}
+{#          <li class="footer__category__item"><a href="{{ url('wiki_about', anchor='contact') }}">{{ _('QQ Group') }}</a></li>#}
+{#        </ul></div>#}
+{#      </div>#}
+{#    </div>#}
+{#  {% endif %}#}
+{#    <div class="footer__extra-link clearfix">#}
+{#      <div class="footer__extra-left">#}
+{#        <ol class="clearfix">#}
+{#          <li class="footer__extra-link-item"><a href="{{ url('wiki_about') }}">{{ _('About') }}</a></li>#}
+{#          <li class="footer__extra-link-item"><a href="{{ url('wiki_about', anchor='contact') }}">{{ _('Contact Us') }}</a></li>#}
+{#          <li class="footer__extra-link-item"><a href="{{ url('wiki_about', anchor='privacy') }}">{{ _('Privacy') }}</a></li>#}
+{#          <li class="footer__extra-link-item"><a href="{{ url('wiki_about', anchor='tos') }}">{{ _('Terms of Service') }}</a></li>#}
+{#          <li class="footer__extra-link-item"><a href="{{ url('wiki_about', anchor='contact') }}">{{ _('Copyright Complaint') }}</a></li>#}
+{#          <li class="footer__extra-link-item nojs--hide" data-dropdown-target="#menu-footer-lang">#}
+{#            <span><span class="icon icon-global"></span> Language <span class="icon icon-expand_less"></span></span>#}
+{#            <ol class="dropdown-target menu" id="menu-footer-lang">#}
+{#            {%- for k, v in model.setting.SETTINGS_BY_KEY['viewLang'].range -%}#}
+{#              <li class="menu__item"><a class="menu__link" href="{{ url('switch_language', lang=k) }}">{{ v }}</a></li>#}
+{#            {%- endfor -%}#}
+{#            </ol>#}
+{#          </li>#}
+{#          <li class="footer__extra-link-item">#}
+{#            {% if handler.session.legacy %}#}
+{#              <a href="/legacy">{{ _('Standard mode') }}</a>#}
+{#            {% else %}#}
+{#              <a href="/legacy?legacy=true">{{ _('Legacy mode') }}</a>#}
+{#            {% endif %}#}
+{#          </li>#}
+{#          <li class="footer__extra-link-item nojs--hide" data-dropdown-target="#menu-footer-theme">#}
+{#            <span><span class="icon icon-global"></span> {{ _('Theme') }} <span class="icon icon-expand_less"></span></span>#}
+{#            <ol class="dropdown-target menu" id="menu-footer-theme">#}
+{#              <li class="menu__item"><a class="menu__link" href="{{ url('set_theme', theme='light') }}">{{ _('Light') }}</a></li>#}
+{#              <li class="menu__item"><a class="menu__link" href="{{ url('set_theme', theme='dark') }}">{{ _('Dark') }}</a></li>#}
+{#            </ol>#}
+{#          </li>#}
+{#        </ol>#}
+{#      </div>#}
+{#      <div class="footer__extra-right">#}
+{#        <ol class="clearfix">#}
+{#          {%- for html in (handler.domain.ui.footer_extra_html|default('')).split('\n') -%}#}
+{#            <li class="footer__extra-link-item">{{ html|safe }}</li>#}
+{#          {%- endfor -%}#}
+{##}
+{#          {%- for html in (model.system.get('ui-default.footer_extra_html')|default('')).split('\n') -%}#}
+{#            <li class="footer__extra-link-item">{{ html|safe }}</li>#}
+{#          {%- endfor -%}#}
+{#          {%- for html in (model.system.get('ui-default.footer_extra_html')|default('')).split('\n') -%}#}
+{#            <li class="footer__extra-link-item">{{ html|safe }}</li>#}
+{#          {%- endfor -%}#}
+{#          <li class="footer__extra-link-item">Worker {{ process.env.NODE_APP_INSTANCE }}, {{ Date.now() - handler.args.__start }}ms</li>#}
+{#          <!-- Prepare {{ handler.args.__prepareDone - handler.args.__prepare }}ms -->#}
+{#          <!-- Method {{ handler.args.__methodDone - handler.args.__method }}ms -->#}
+{#          <li class="footer__extra-link-item">Powered by <a href="https://hydro.js.org">Hydro v{{ global.Hydro.version.hydrooj }}</a> {{ "Professional" if model.system.get('server.pro') else "Community" }}</li>#}
+{#        </ol>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div></div>#}
+          <footer>
+        <div class="footer w">
+          <div class="footer-left">
+            <img src="{{ UiContext.cdn_prefix }}img/bottomLogo.png" id="logo" alt="" />
+          </div>
+          <div class="footer-right">
+            <div>
+              <div class="rightItem">
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-bottom: 20px;
+                    width: 180px;
+                  "
+                >
+                  <img
+                    src="{{ UiContext.cdn_prefix }}img/用户.png"
+                    alt=""
+                    style="width: 25px; height: 34px"
+                  />
+                  <p style="font-size: 18px; margin-top: 6px">用户服务</p>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                  "
+                >
+                  <span>常见问题</span>
+                  <span style="color: #ff7d37">玩法攻略</span>
+                </div>
+                <div>客服支持：QQ群234567</div>
+                <div>分享交流：QQ群234567</div>
+              </div>
+            </div>
+            <div>
+              <div class="rightItem">
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-bottom: 20px;
+                  "
+                >
+                  <img
+                    src="{{ UiContext.cdn_prefix }}img/合作.png"
+                    alt=""
+                    style="width: 35px; height: 34px"
+                  />
+                  <p style="font-size: 18px; margin-top: 6px">商务合作</p>
+                </div>
+                <div><a href="/wiki/about?type=1" style="text-decoration: none; color: inherit;">赛事平台委托评测</a></div>
+                <div><a href="/wiki/about?type=2" style="text-decoration: none; color: inherit;">中小学OJ平台定制</a></div>
+                <div><a href="/wiki/about?type=0" style="text-decoration: none; color: inherit;">教培机构OJ共享服务</a></div>
+                <div>合作热线：400-850-8565</div>
+              </div>
+            </div>
+            <div>
+              <div class="rightItem">
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-bottom: 20px;
+                    width: 160px;
+                  "
+                >
+                  <img
+                    src="{{ UiContext.cdn_prefix }}img/觉醒.png"
+                    alt=""
+                    style="width: 25px; height: 34px"
+                  />
+                  <p style="font-size: 18px; margin-top: 6px">觉醒台规则</p>
+                </div>
+
+                <div>哪些行为一定不能做？</div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                  "
+                >
+                  <span>隐私协议</span>
+                  <span>奖惩协议</span>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                  "
+                >
+                  <span>投诉建议</span>
+                  <span></span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="rightItem">
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-bottom: 20px;
+                    width: 170px;
+                  "
+                >
+                  <img
+                    src="{{ UiContext.cdn_prefix }}img/关于.png"
+                    alt=""
+                    style="width: 34px; height: 34px"
+                  />
+                  <p style="font-size: 18px; margin-top: 6px">关于CODEMATE</p>
+                </div>
+
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                  "
+                >
+                  <span>品牌故事</span>
+                  <span>平台优势</span>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                  "
+                >
+                  <span>联系我们</span>
+                  <span>加入我们</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="rightItem">
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-bottom: 20px;
+                    width: 150px;
+                  "
+                >
+                  <img
+                    src="{{ UiContext.cdn_prefix }}img/招募.png"
+                    alt=""
+                    style="width: 25px; height: 34px"
+                  />
+                  <p style="font-size: 18px; margin-top: 6px">人才招募</p>
+                </div>
+
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                  "
+                >
+                  <span>志愿者</span>
+                  <span>命题者</span>
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                  "
+                >
+                  <span>管理员</span>
+                  <span>加入我们</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <div
+        class="w"
+        style="
+          height: 40px;
+          line-height: 40px;
+          text-align: right;
+          color: #797979;
+        "
+      >
+        <span style="margin-left: 20px; cursor: pointer"><a href="{{ url('wiki_about', anchor='contact') }}" style="color: inherit; text-decoration: none;">{{ _('Contact Us') }}</a></span>
+        <span style="margin-left: 20px; cursor: pointer"><a href="{{ url('wiki_about', anchor='tos') }}" style="color: inherit; text-decoration: none;">{{ _('Terms of Service') }}</a></span>
+        <span style="margin-left: 20px; cursor: pointer"><a href="{{ url('record_main') }}" style="color: inherit; text-decoration: none;">{{ _('Judging Queue') }}</a></span>
+        <span style="margin-left: 20px; cursor: pointer"><a href="{{ url('status') }}" style="color: inherit; text-decoration: none;">{{ _('Service Status') }}</a></span>
+        <span style="margin-left: 20px; cursor: pointer">
           {%- for html in (model.system.get('ui-default.footer_extra_html')|default('')).split('\n') -%}
-            <li class="footer__extra-link-item">{{ html|safe }}</li>
+
+              {{ html|safe }}
           {%- endfor -%}
-          <li class="footer__extra-link-item">Worker {{ process.env.NODE_APP_INSTANCE }}, {{ Date.now() - handler.args.__start }}ms</li>
-          <!-- Prepare {{ handler.args.__prepareDone - handler.args.__prepare }}ms -->
-          <!-- Method {{ handler.args.__methodDone - handler.args.__method }}ms -->
-          <li class="footer__extra-link-item">Powered by <a href="https://hydro.js.org">Hydro v{{ global.Hydro.version.hydrooj }}</a> {{ "Professional" if model.system.get('server.pro') else "Community" }}</li>
-        </ol>
+        </span>
       </div>
-    </div>
-  </div></div>
 </div>
+

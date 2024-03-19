@@ -1,0 +1,56 @@
+.user_center_main {
+  padding: 30px;
+  width: min(90%, 1200px);
+  margin: 0 auto;
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+  }
+}
+
+.user_center_right_panel {
+  flex: 1;
+  .sub-title-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .sub-title {
+    font-family: Microsoft YaHei;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-feature-settings: "kern" on;
+    color: #3d3d3d;
+  }
+}
+
+.ant-table-thead {
+  font-family: Microsoft YaHei;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: normal;
+  letter-spacing: 0em;
+
+  font-feature-settings: "kern" on;
+  color: #797979;
+}
+
+.ant-table-wrapper.custom-antd-table {
+  .ant-table-thead {
+    .ant-table-cell {
+      font-family: Microsoft YaHei;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: normal;
+      letter-spacing: 0em;
+
+      font-feature-settings: "kern" on;
+      color: #797979;
+    }
+  }
+}

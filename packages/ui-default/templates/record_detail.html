@@ -4,97 +4,248 @@
 {% if typeof(rdoc['status']) === 'number' %}
   {{ set(UiContext, 'socketUrl', "record-detail-conn?domainId=" + rdoc.domainId + "&rid=" + rdoc._id) }}
 {% endif %}
-<div class="row">
-  <div class="medium-9 columns">
-    {% if typeof(rdoc['status']) === 'number' %}
-      {% include 'record_detail_status.html' %}
+
+<div class="title" style="margin: 33px 0 25px 0">
+  <div style="display: flex; height: 50px; line-height: 50px" class="w">
+    <div
+            style="
+              font-size: 20px;
+              font-weight: 700;
+              margin-left: 30px;
+              position: relative;
+            "
+    >
+      CODEMATE
+      <div class="titleBorder"></div>
+    </div>
+    <span
+            style="
+              font-size: 20px;
+              color: #333;
+              margin-left: 20px;
+              font-weight: 400;
+            "
+    >评测结果</span
+    >
+  </div>
+</div>
+<div class="bottom w">
+  <div class="topicLabel">
+    <span>{{ _('Submit By') }}:{{ user.render_inline(udoc, modbadge=false) }}</span>
+    <span>{{ _('Problem') }}:{{ problem.render_problem_title(pdoc, tdoc, show_tags=false, show_invisible_flag=false) }}</span>
+    <span>{{ _('Submit At') }}:{{ datetimeSpan(rdoc._id) |safe}}</span>
+    {% if typeof(rdoc['score']) == 'number' %}
+    <span style="color: {{ utils.status.getScoreColor(rdoc.score|default(0)) }}">{{ _('Score') }}:{{ rdoc.score|default(0) }}</span>
     {% endif %}
-    {% if rdoc['code'] or rdoc.files.code %}
-    <div class="section">
+  </div>
+</div>
+
+
+
+
+<div class="row">
+<!--  <div class="section side">-->
+<!--    <div class="section__header">-->
+<!--      <h1 class="section__title">{{ _('Information') }}</h1>-->
+<!--    </div>-->
+<!--    {% if handler.user.hasPerm(perm.PERM_REJUDGE) and not rdoc.files.hack %}-->
+<!--    <div class="section__body no-padding">-->
+<!--      <ol class="menu">-->
+<!--        <li class="menu__item">-->
+<!--          <form method="post">-->
+<!--            <button type="submit" name="operation" value="rejudge" class="menu__link">-->
+<!--              <span class="icon icon-refresh"></span> {{ _('Rejudge') }}-->
+<!--            </button>-->
+<!--          </form>-->
+<!--        </li>-->
+<!--        <li class="menu__item">-->
+<!--          <form method="post">-->
+<!--            <button type="submit" name="operation" value="cancel" class="menu__link">-->
+<!--              <span class="icon icon-close"></span> {{ _('Cancel Score') }}-->
+<!--            </button>-->
+<!--          </form>-->
+<!--        </li>-->
+<!--      </ol>-->
+<!--    </div>-->
+<!--    {% endif %}-->
+<!--    {% if handler.user.hasPerm(perm.PERM_SUBMIT_PROBLEM) and pdoc.config.hackable and rdoc.status === STATUS.STATUS_ACCEPTED and rdoc.uid !== handler.user._id %}-->
+<!--    <div class="section__body no-padding">-->
+<!--      <ol class="menu">-->
+<!--        <li class="menu__item">-->
+<!--          <a class="menu__link" href="{{ url('problem_hack', pid=pdoc.pid|default(pdoc.docId), rid=rdoc._id) }}">-->
+<!--            <span class="icon icon-debug"></span> {{ _('Hack') }}-->
+<!--          </a>-->
+<!--        </li>-->
+<!--      </ol>-->
+<!--    </div>-->
+<!--    {% endif %}-->
+<!--    <div class="section__body typo no-media">-->
+<!--      <dl class="large horizontal">-->
+<!--        <dt>{{ _('Submit By') }}</dt>-->
+<!--        <dd>{{ user.render_inline(udoc, modbadge=false) }}</dd>-->
+<!--        {% if pdoc %}-->
+<!--        <dt>{{ _('Problem') }}</dt>-->
+<!--        <dd>-->
+<!--          {{ problem.render_problem_title(pdoc, tdoc, show_tags=false, show_invisible_flag=false) }}-->
+<!--        </dd>-->
+<!--        {% endif %}-->
+<!--        {% if tdoc %}-->
+<!--        <dt>{{ _('Homework') if tdoc.rule == 'homework' else _('Contest') }}</dt>-->
+<!--        <dd>-->
+<!--          <a href="{{ url('homework_detail' if tdoc.rule == 'homework' else 'contest_detail', tid=tdoc.docId) }}">{{ tdoc.title }}</a>-->
+<!--        </dd>-->
+<!--        {% endif %}-->
+<!--        {% if pdoc.config.type != 'objective' %}-->
+<!--        <dt>{{ _('Language') }}</dt>-->
+<!--        <dd>{{ model.setting.langs[rdoc.lang].display }}</dd>-->
+<!--        {% endif %}-->
+<!--        <dt>{{ _('Submit At') }}</dt>-->
+<!--        <dd>{{ datetimeSpan(rdoc._id)|safe }}</dd>-->
+<!--        {% if rdoc.judgeAt %}-->
+<!--        <dt>{{ _('Judged At') }}</dt>-->
+<!--        <dd>{{ datetimeSpan(rdoc.judgeAt)|safe }}</dd>-->
+<!--        {% endif %}-->
+<!--        {% if judge_udoc %}-->
+<!--        <dt>{{ _('Judged By') }}</dt>-->
+<!--        <dd>{{ user.render_inline(judge_udoc, badge=false) }}</dd>-->
+<!--        {% endif %}-->
+<!--      </dl>-->
+<!--      {% if typeof(rdoc['status']) === 'number' %}-->
+<!--      {% include 'record_detail_summary.html' %}-->
+<!--      {% endif %}-->
+<!--    </div>-->
+<!--  </div>-->
+
+    {% if typeof(rdoc['status']) === 'number' %}
+    <div class="" id="status">
       <div class="section__header">
-        <h1 class="section__title">{{ _('Code') }}</h1>
-        <div class="section__tools">
-          <a class="primary rounded button" href="?download=true"><span class="icon icon-download"></span> {{ _('Download') }}</a>
+        <h1 class="section__title">
+          <span class="icon record-status--icon {{ model.builtin.STATUS_CODES[rdoc['status']] }}"></span>
+          {% if typeof(rdoc['score']) == 'number' %}
+          <span style="color: {{ utils.status.getScoreColor(rdoc.score|default(0)) }}">{{ rdoc.score|default(0) }}</span>
+          {% endif %}
+          <span class="record-status--text {{ model.builtin.STATUS_CODES[rdoc['status']] }}">
+            {{ model.builtin.STATUS_TEXTS[rdoc['status']] }}
+          </span>
+        </h1>
+      </div>
+      <h2 style="color: #ff7d37; margin: 10px">【评测细节】</h2>
+      {% if rdoc.compilerTexts.length %}
+      <div class="section__body">
+        <pre class="compiler-text" style="background-color: #FFFFFF">{{ rdoc.compilerTexts|join('\n')|ansi|safe }}</pre>
+      </div>
+      {% endif %}
+      {% if rdoc.judgeTexts.length %}
+      <div class="section__body">
+        <pre class="judge-text" style="background-color: #FFFFFF">{{ formatJudgeTexts(rdoc.judgeTexts)|ansi|safe }}</pre>
+      </div>
+      {% endif %}
+      {% if rdoc.testCases.length %}
+      <span style="color: #ff7d37;  margin: 10px">【评测点】</span>
+      <div class="section__body">
+        <table class="data-table record_detail__table">
+          <colgroup>
+            <col class="col--case">
+            <col class="col--status">
+            <col class="col--time">
+            <col class="col--memory">
+          </colgroup>
+          <thead>
+          <tr>
+            <th class="col--case record-status--border">#</th>
+            <th class="col--status">
+              {{ _('Status') }}
+              {% if rdoc.subtasks and (rdoc.subtasks|length > 1 or rdoc.subtasks[Object.keys(rdoc.subtasks)[0]].type == 'sum') %}
+              <span class="float-right">{{ _('Score') }}</span>
+              {% endif %}
+            </th>
+            <th class="col--time">{{ _('Time Cost') }}</th>
+            <th class="col--memory">{{ _('Memory Cost') }}</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% set _key = 'id' if rdoc.testCases|groupby('subtaskId')|length == 1 else 'subtaskId' %}
+          {%- for subtaskId, rcdocs in rdoc.testCases|sort(false,false,_key)|groupby(_key) -%}
+          {% if rcdocs.length > 1 %}
+          <tr class="subtask">
+            <td class="col--case">
+              #{{ subtaskId|int|default(1) }}
+            </td>
+            {% if rdoc.subtasks %}
+            <td class="col--status">
+              <span class="icon record-status--icon {{ model.builtin.STATUS_CODES[rdoc.subtasks[subtaskId]['status']] }}"></span>
+              <span class="record-status--text {{ model.builtin.STATUS_CODES[rdoc.subtasks[subtaskId]['status']] }}">
+              {{ model.builtin.STATUS_TEXTS[rdoc.subtasks[subtaskId]['status']] }}
+            </span>
+              <span class="float-right record-status--text {{ model.builtin.STATUS_CODES[rdoc.subtasks[subtaskId]['status']] }}">{{ rdoc.subtasks[subtaskId]['score']|default(0) }}</span>
+            </td>
+            <td class="col--time"></td>
+            <td class="col--memory"></td>
+            {% endif %}
+          </tr>
+          {% endif %}
+          {%- for rcdoc in rcdocs|sort(false,false,'id') -%}
+          <tr class="{{ 'subtask-case' if rcdocs.length == 1 else 'case' }}">
+            <td class="col--case record-status--border {{ model.builtin.STATUS_CODES[rcdoc['status']] }}">
+              #{{ subtaskId|int|default(1) }}{% if rcdocs.length > 1 %}-{{ rcdoc.id|default(loop.index) }}{% endif %}
+            </td>
+            <td class="col--status">
+              <span class="icon record-status--icon {{ model.builtin.STATUS_CODES[rcdoc['status']] }}"></span>
+              <span class="record-status--text {{ model.builtin.STATUS_CODES[rcdoc['status']] }}">
+                {{ model.builtin.STATUS_TEXTS[rcdoc['status']] }}
+              </span>
+              {% if (rdoc.subtasks and _key != 'id' and rcdocs.length == 1) or (_key == 'id' and rdoc.subtasks[rcdoc.subtaskId].type == 'sum') %}
+              <span class="float-right record-status--text {{ model.builtin.STATUS_CODES[(rdoc.subtasks[subtaskId]['status'] if _key != 'id' else rcdoc.status)] }}">
+                {{ (rdoc.subtasks[subtaskId]['score'] if _key != 'id' else rcdoc.score)|default(0) }}
+              </span>
+              {% endif %}
+              <span>{{ formatJudgeTexts([rcdoc.message]) if rcdoc.message else '' }}</span>
+            </td>
+            <td class="col--time">{% if rcdoc['status'] == STATUS.STATUS_TIME_LIMIT_EXCEEDED or rcdoc['status'] == STATUS.STATUS_MEMORY_LIMIT_EXCEEDED or rcdoc['status'] == STATUS.STATUS_OUTPUT_LIMIT_EXCEEDED %}&ge;{% endif %}{{ rcdoc.time|round|int }}ms</td>
+            <td class="col--memory">{% if rcdoc['status'] == STATUS.STATUS_TIME_LIMIT_EXCEEDED or rcdoc['status'] == STATUS.STATUS_MEMORY_LIMIT_EXCEEDED or rcdoc['status'] == STATUS.STATUS_OUTPUT_LIMIT_EXCEEDED %}&ge;{% endif %}{{ size(rcdoc.memory, 1024) }}</td>
+          </tr>
+          {%- endfor -%}
+          {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+
+    {% endif %}
+
+
+    {% if rdoc['code'] or rdoc.files.code %}
+    <h2 style="color: #ff7d37; margin: 10px">【{{ _('Code') }}】</h2>
+    <div>
+      <div class="section__header">
+        <h1 class="section__title"></h1>
+        <div class="">
+          <a class="rounded button" href="?download=true"><span class="icon icon-download"></span> {{ _('Download') }}{{ _('Code') }}</a>
         </div>
       </div>
-      <div class="section__body">
+      <div class="section__body"  style="margin-top: 10px;">
         <pre class="line-numbers"><code class="language-{{ model.setting.langs[rdoc.lang].highlight }}">{{ rdoc['code'] }}</code></pre>
       </div>
     </div>
     {% endif %}
-  </div>
-  <div class="medium-3 columns">
-    <div class="section side">
-      <div class="section__header">
-        <h1 class="section__title">{{ _('Information') }}</h1>
-      </div>
-    {% if handler.user.hasPerm(perm.PERM_REJUDGE) and not rdoc.files.hack %}
-      <div class="section__body no-padding">
-        <ol class="menu">
-          <li class="menu__item">
-            <form method="post">
-              <button type="submit" name="operation" value="rejudge" class="menu__link">
-                <span class="icon icon-refresh"></span> {{ _('Rejudge') }}
-              </button>
-            </form>
-          </li>
-          <li class="menu__item">
-            <form method="post">
-              <button type="submit" name="operation" value="cancel" class="menu__link">
-                <span class="icon icon-close"></span> {{ _('Cancel Score') }}
-              </button>
-            </form>
-          </li>
-        </ol>
-      </div>
-    {% endif %}
-    {% if handler.user.hasPerm(perm.PERM_SUBMIT_PROBLEM) and pdoc.config.hackable and rdoc.status === STATUS.STATUS_ACCEPTED and rdoc.uid !== handler.user._id %}
-      <div class="section__body no-padding">
-        <ol class="menu">
-          <li class="menu__item">
-            <a class="menu__link" href="{{ url('problem_hack', pid=pdoc.pid|default(pdoc.docId), rid=rdoc._id) }}">
-              <span class="icon icon-debug"></span> {{ _('Hack') }}
-            </a>
-          </li>
-        </ol>
-      </div>
-    {% endif %}
-      <div class="section__body typo no-media">
-        <dl class="large horizontal">
-          <dt>{{ _('Submit By') }}</dt>
-          <dd>{{ user.render_inline(udoc, modbadge=false) }}</dd>
-          {% if pdoc %}
-            <dt>{{ _('Problem') }}</dt>
-            <dd>
-              {{ problem.render_problem_title(pdoc, tdoc, show_tags=false, show_invisible_flag=false) }}
-            </dd>
-          {% endif %}
-          {% if tdoc %}
-            <dt>{{ _('Homework') if tdoc.rule == 'homework' else _('Contest') }}</dt>
-            <dd>
-              <a href="{{ url('homework_detail' if tdoc.rule == 'homework' else 'contest_detail', tid=tdoc.docId) }}">{{ tdoc.title }}</a>
-            </dd>
-          {% endif %}
-          {% if pdoc.config.type != 'objective' %}
-            <dt>{{ _('Language') }}</dt>
-            <dd>{{ model.setting.langs[rdoc.lang].display }}</dd>
-          {% endif %}
-          <dt>{{ _('Submit At') }}</dt>
-          <dd>{{ datetimeSpan(rdoc._id)|safe }}</dd>
-          {% if rdoc.judgeAt %}
-            <dt>{{ _('Judged At') }}</dt>
-            <dd>{{ datetimeSpan(rdoc.judgeAt)|safe }}</dd>
-          {% endif %}
-          {% if judge_udoc %}
-            <dt>{{ _('Judged By') }}</dt>
-            <dd>{{ user.render_inline(judge_udoc, badge=false) }}</dd>
-          {% endif %}
-        </dl>
-        {% if typeof(rdoc['status']) === 'number' %}
-          {% include 'record_detail_summary.html' %}
-        {% endif %}
-      </div>
-    </div>
-  </div>
+
+
 </div>
+{% endblock %}
+
+{% block style %}
+  .topicLabel {
+    display: flex;
+    justify-content: space-around;
+    height: 35px;
+    line-height: 35px;
+    opacity: 1;
+    background: #f9f9f9;
+    font-size: 14px;
+    font-weight: 400;
+    color: #797979;
+    margin-bottom: 28px;
+  }
+
 {% endblock %}

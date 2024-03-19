@@ -60,6 +60,7 @@ export const UserAlreadyExistError = Err('UserAlreadyExistError', ForbiddenError
 export const InvalidTokenError = Err('InvalidTokenError', ForbiddenError, 'The {0} Token is invalid.');
 export const BlacklistedError = Err('BlacklistedError', ForbiddenError, 'Address or user {0} is blacklisted.');
 export const VerifyPasswordError = Err('VerifyPasswordError', ForbiddenError, "Passwords don't match.");
+export const VerifyCodeError = Err('VerifyCodeError', ForbiddenError, "Invalid Verify Code.");
 export const OpcountExceededError = Err('OpcountExceededError', ForbiddenError, 'Too frequent operations of {0} (limit: {2} operations in {1} seconds).');
 export const PermissionError = Err('PermissionError', ForbiddenError, function (this: HydroError) {
     if (typeof this.params[0] === 'bigint') {

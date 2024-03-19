@@ -272,9 +272,12 @@ declare module './model/problem' {
             domainId: string;
             pid: number;
         };
+        assign?: string[];
 
         /** string (errormsg) */
         config: string | ProblemConfig;
+
+        brief?: string;
     }
 }
 export type { ProblemDoc } from './model/problem';
@@ -380,6 +383,7 @@ export interface Tdoc extends Document {
     docType: document['TYPE_CONTEST'];
     beginAt: Date;
     endAt: Date;
+
     attend: number;
     title: string;
     content: string;
@@ -392,10 +396,15 @@ export interface Tdoc extends Document {
     allowViewCode?: boolean;
 
     // For contest
+    importantContent?: string;
     lockAt?: Date;
     unlocked?: boolean;
     autoHide?: boolean;
     balloon?: Record<number, string>;
+    imageURL?: string;
+    checkinBeginAt?: Date;
+    checkinEndAt?: Date;
+
 
     /**
      * In hours
@@ -410,6 +419,9 @@ export interface Tdoc extends Document {
     // For training
     description?: string;
     dag?: TrainingNode[];
+    // new tag
+    tag: string[];
+
 }
 
 export interface TrainingDoc extends Omit<Tdoc, 'docType'> {

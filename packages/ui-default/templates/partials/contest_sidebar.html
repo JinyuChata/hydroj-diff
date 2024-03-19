@@ -102,7 +102,7 @@
       <dd>
         {{ _(model.contest.statusText(tdoc, tsdoc)) }}
         {% if tsdoc.attend %}
-          ({{ _('Attended') }})
+        ({{ _('Attended') }})
         {% endif %}
       </dd>
       <dt>{{ _('Rule') }}</dt><dd>{{ _(model.contest.RULES[tdoc.rule].TEXT) }}</dd>

@@ -1,37 +1,238 @@
-.page--ranking, .page--homepage
-  .col--rank
-    width: rem(65px)
-    position: relative
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-size: 16px;
+    font-family: 'PingFang-SC-Regular';
+    list-style: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
 
-  .col--user
-    width: rem(220px)
+body {
+}
 
-  .col--rp
-    width: rem(60px)
-    text-align: right
+.has-gutter {
+    background-color: #f9f9f9 !important;
+}
 
-  .col--detail
-    width: rem(50px)
-    text-align: center
-  
-  &[lang="en"]
-    .col--detail
-      width: rem(75px)
+#root {
+    background: #fff;
+    padding-top: 75px;
+}
 
-  .col--ac
-    width: rem(50px)
-    text-align: center
-  
-  &[lang="en"]
-    .col--ac
-      width: rem(70px)
+/* 版心 */
+.w {
+    width: 1280px;
+    margin: 0 auto;
+}
 
-  .col--bio
+// header {
+//     background-color: #fff;
+//     position: fixed;
+//     top: 0;
+//     width: 100%;
+//     z-index: 99999;
+//     height: 75px;
+// }
+
+header .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header #logo {
+    height: 75px;
+}
+
+.header-center {
+    flex: 2;
+    margin-left: 130px;
+}
+
+.header-center ul {
+    display: flex;
+}
+
+.header-center ul li {
+    margin: 0 10px;
+    position: relative;
+    height: 35px;
+    line-height: 35px;
+    cursor: pointer;
+}
+
+.liActive {
+    color: #ff7d37;
+    font-weight: 600;
+}
+
+.header-center ul .liActive::before {
+    content: '';
+    /* 必须有内容才能显示伪元素 */
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    /* 放在底部 */
+    width: 50%;
+    /* 宽度等于父元素宽度 */
+    border-bottom: 3px solid #ff7d37;
+    /* 边框样式不变 */
+    transform: translateX(-50%);
+    /* 将元素向左移动自身宽度的一半，实现居中 */
+}
+
+.header-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.header-right .Avatar img {
+    border-radius: 50%;
+}
+
+.header-right .inputBox {
+    background-color: #fff;
+    padding: 5px 10px;
+    width: 100px;
+    margin: 0 20px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+}
+
+.header-right input {
+    border: none;
+    outline: none;
+    font-size: 12px;
+    width: 100%;
+}
+
+.el-tabs__item:hover {
+    color: #ff7d37;
+    cursor: pointer;
+}
+
+.is-active {
+    color: #ff7d37 !important;
+}
+
+.el-tabs__active-bar {
+    background-color: #ff7d37;
+}
+
+.el-collapse {
+    border-top: none;
+}
+
+
+.bottomCenter ul li {
+    cursor: pointer;
+}
+
+.footer {
+    display: flex;
+    padding-top: 40px;
+}
+
+.footer-right {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    margin-left: 90px;
+    font-size: 16px;
+}
+
+.footer-right .rightItem {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-right .rightItem p {
+    color: #000;
+}
+
+.footer-right .rightItem div {
+    margin-top: 10px;
+    color: #797979;
+}
+
+.tabsAll {
+    position: fixed;
+    /* 居中靠左 */
+    left: 0;
+    top: 50%;
+}
+
+.tabs {
+    /* 矩形 42 */
+    width: 153px;
+    height: 60px;
+    border-radius: 0px 40px 40px 0px;
+    opacity: 1;
+    background: #ff7d37;
+    box-shadow: 4px 2px 10px 0px #fff0e7;
+    z-index: 1000;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+.el-table th.el-table__cell > .cell {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.el-tabs__item {
+    font-size: 18px;
+}
+
+.titleBorder {
+    position: absolute;
+    top: 33px;
+    width: 114px;
+    height: 4px;
+    opacity: 1;
+    background: #ff7d37;
+}
+
+/* █████████████████████████████████████████ 代码护城河 █████████████████████████████████████████ */
+.aioj-clearfix:after {
     display: block;
+    clear: both;
+    content: "";
+    visibility: hidden;
+    height: 0;
+}
 
-  td.col--bio
-    height: 36px !important;
+.rank-type-title {
+    float: left;
+    width: 100px;
+    height: 30px;
+    margin-right: 10px;
+    cursor: pointer;
 
-  +mobile()
-    .col--bio, .col--detail
-      display: none
+    font-family: Microsoft YaHei;
+    font-size: 16px;
+    color: #797979;
+    font-weight: normal;
+    line-height: 30px;
+    text-align: center;
+
+}
+
+.rankTypeTitleSelect {
+    font-weight: bold;
+    color: #FFFFFF;
+    border-radius: 8px;
+    background: #FF7D37;
+    text-align: center;
+}
+
+.no-hover-effect .el-table__body tr:hover>td.el-table__cell {
+    background: inherit !important; /* 使用 !important 确保覆盖默认样式 */
+}

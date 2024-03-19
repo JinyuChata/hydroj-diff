@@ -18,6 +18,7 @@ import { PERM, STATUS, STATUS_SHORT_TEXTS } from './builtin';
 import * as document from './document';
 import problem from './problem';
 import user, { User } from './user';
+import {is} from "schemastery";
 
 interface AcmJournal {
     rid: ObjectId;
@@ -32,6 +33,47 @@ interface AcmDetail extends AcmJournal {
     penalty: number;
     real: number;
 }
+// New Status----- STarted
+export function isBeforeCheckin(tdoc: Tdoc) {
+    if (!tdoc.checkinBeginAt) return false;
+    const readyAt = tdoc.checkinBeginAt.getTime();
+    return Date.now() < readyAt;
+}
+
+export function isOnCheckin(tdoc: Tdoc) {
+    if (!tdoc.checkinBeginAt) return true;
+    const checkinEndAt = tdoc.checkinEndAt.getTime();
+    const checkinBeginAt = tdoc.checkinBeginAt.getTime();
+    const now = Date.now();
+    return checkinBeginAt <= now && now < checkinEndAt;
+}
+
+export function isAfterCheckin(tdoc: Tdoc) {
+    if (!tdoc.checkinBeginAt) return false;
+    const checkinEndAt = tdoc.checkinEndAt.getTime();
+    const checkinBeginAt = tdoc.checkinBeginAt.getTime();
+    const now = Date.now();
+    return checkinBeginAt <= now && now < checkinEndAt;
+}
+
+export function isBeforeGoing(tdoc: Tdoc) {
+    const beginAt = tdoc.beginAt.getTime();
+    const now = Date.now();
+    return now < beginAt;
+}
+
+export function isOngoing(tdoc: Tdoc, tsdoc?: any) {
+    const now = new Date();
+    if (tsdoc && tdoc.duration && tsdoc.startAt <= new Date(Date.now() - Math.floor(tdoc.duration * Time.hour))) return false;
+    return (tdoc.beginAt <= now && now < tdoc.endAt);
+}
+
+export function isDone(tdoc: Tdoc, tsdoc?: any) {
+    if (tdoc.endAt <= new Date()) return true;
+    if (tsdoc && tdoc.duration && tsdoc.startAt <= new Date(Date.now() - Math.floor(tdoc.duration * Time.hour))) return true;
+    return false;
+}
+// New Status----- End
 
 export function isNew(tdoc: Tdoc, days = 1) {
     const readyAt = tdoc.beginAt.getTime();
@@ -48,17 +90,17 @@ export function isNotStarted(tdoc: Tdoc) {
     return (new Date()) < tdoc.beginAt;
 }
 
-export function isOngoing(tdoc: Tdoc, tsdoc?: any) {
-    const now = new Date();
-    if (tsdoc && tdoc.duration && tsdoc.startAt <= new Date(Date.now() - Math.floor(tdoc.duration * Time.hour))) return false;
-    return (tdoc.beginAt <= now && now < tdoc.endAt);
-}
+// export function isOngoing(tdoc: Tdoc, tsdoc?: any) {
+//     const now = new Date();
+//     if (tsdoc && tdoc.duration && tsdoc.startAt <= new Date(Date.now() - Math.floor(tdoc.duration * Time.hour))) return false;
+//     return (tdoc.beginAt <= now && now < tdoc.endAt);
+// }
 
-export function isDone(tdoc: Tdoc, tsdoc?: any) {
-    if (tdoc.endAt <= new Date()) return true;
-    if (tsdoc && tdoc.duration && tsdoc.startAt <= new Date(Date.now() - Math.floor(tdoc.duration * Time.hour))) return true;
-    return false;
-}
+// export function isDone(tdoc: Tdoc, tsdoc?: any) {
+//     if (tdoc.endAt <= new Date()) return true;
+//     if (tsdoc && tdoc.duration && tsdoc.startAt <= new Date(Date.now() - Math.floor(tdoc.duration * Time.hour))) return true;
+//     return false;
+// }
 
 export function isLocked(tdoc: Tdoc, time = new Date()) {
     if (!tdoc.lockAt) return false;
@@ -732,11 +774,17 @@ export async function add(
     domainId: string, title: string, content: string, owner: number,
     rule: string, beginAt = new Date(), endAt = new Date(), pids: number[] = [],
     rated = false, data: Partial<Tdoc> = {},
+    checkinBeginAt = new Date(), checkinEndAt = null, imageURL: string = ""
 ) {
+    if (checkinEndAt === null) {
+        checkinEndAt = new Date(endAt);
+        checkinEndAt.setFullYear(checkinEndAt.getFullYear() + 10);
+    }
     if (!RULES[rule]) throw new ValidationError('rule');
     if (beginAt >= endAt) throw new ValidationError('beginAt', 'endAt');
+    if (checkinBeginAt > checkinEndAt) throw new ValidationError('checkinBeginAt', 'checkinEndAt');
     Object.assign(data, {
-        content, owner, title, rule, beginAt, endAt, pids, attend: 0,
+        content, owner, title, rule, beginAt, endAt, pids, attend: 0, checkinBeginAt, checkinEndAt, imageURL
     });
     RULES[rule].check(data);
     await bus.parallel('contest/before-add', data);
@@ -861,6 +909,7 @@ export function countStatus(domainId: string, query: any) {
 export function getMulti(
     domainId: string, query: Filter<document.DocType['30']> = {},
 ) {
+    console.log('kf4j1z', domainId, query)
     return document.getMulti(domainId, document.TYPE_CONTEST, query).sort({ beginAt: -1 });
 }
 
@@ -975,6 +1024,22 @@ export function applyProjection(tdoc: Tdoc, rdoc: RecordDoc, udoc: User) {
     return RULES[tdoc.rule].applyProjection(tdoc, rdoc, udoc);
 }
 
+export const statusTextNewCheckin = (tdoc: Tdoc, tsdoc?: any) => (
+    !isBeforeGoing(tdoc) && !isOngoing(tdoc, tsdoc) ?
+        '已结束'
+        : (isBeforeCheckin(tdoc)
+            ? '报名未开始'
+            : isOnCheckin(tdoc)
+                ? '报名中'
+                    : '报名已结束'));
+
+export const statusTextNewGoing = (tdoc: Tdoc, tsdoc?: any) => (
+    isBeforeGoing(tdoc)
+        ? '比赛未开始'
+        : isOngoing(tdoc)
+            ? '比赛中'
+            : '已结束');
+
 export const statusText = (tdoc: Tdoc, tsdoc?: any) => (
     isNew(tdoc)
         ? 'New'
@@ -986,6 +1051,8 @@ export const statusText = (tdoc: Tdoc, tsdoc?: any) => (
 
 global.Hydro.model.contest = {
     RULES,
+    statusTextNewCheckin,
+    statusTextNewGoing,
     buildContestRule,
     add,
     getListStatus,
@@ -1018,6 +1085,10 @@ global.Hydro.model.contest = {
     getClarification,
     getMultiClarification,
     isNew,
+    isAfterCheckin,
+    isOnCheckin,
+    isBeforeCheckin,
+    isBeforeGoing,
     isUpcoming,
     isNotStarted,
     isOngoing,

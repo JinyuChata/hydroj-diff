@@ -1,6 +1,7 @@
 {
   "exclude": [
     "./public",
+    "./public_backup"
   ],
   "compilerOptions": {
     "resolveJsonModule": true,

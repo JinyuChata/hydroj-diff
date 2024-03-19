@@ -1,0 +1,13 @@
+{% extends "layout/basic.html" %}
+{% block content %}
+<div class="row">
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+        <p style="font-size: 18px; text-align: center; margin-bottom: 20px;">
+            你还没有本题的查看权限。付款后你将可以查看本题{{ pid }}和提交本题。
+        </p>
+        <a href="{{ payment_url }}" style="display: inline-block; background-color: #4CAF50; color: white; padding: 14px 20px; text-align: center; text-decoration: none; font-size: 16px; border-radius: 5px;">
+            进入付款界面
+        </a>
+    </div>
+</div>
+{% endblock %}

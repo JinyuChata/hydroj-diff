@@ -29,6 +29,16 @@
           </div>
           <div class="row">
             {{ form.form_text({
+              columns:12,
+              label:'Image URL',
+              name:'imageURL',
+              placeholder:'https://...',
+              value:tdoc.imageURL|default(''),
+              row:false
+            }) }}
+          </div>
+          <div class="row">
+            {{ form.form_text({
               columns:3,
               label:'Begin Date',
               name:'beginAtDate',
@@ -63,6 +73,54 @@
               row:false
             }) }}
           </div>
+          <div class="row">
+            {{ form.form_text({
+              columns:3,
+              label:'Checkin Begin Date',
+              name:'checkinBeginAtDate',
+              placeholder:'YYYY-mm-dd',
+              value:checkinBeginAt.format('YYYY-M-D'),
+              date:true,
+              row:false
+            }) }}
+            {{ form.form_text({
+              columns:3,
+              label:'Checkin Begin Time',
+              name:'checkinBeginAtTime',
+              placeholder:'HH:MM',
+              value:checkinBeginAt.format('H:mm'),
+              time:true,
+              row:false
+            }) }}
+            {{ form.form_text({
+            columns:3,
+            label:'Checkin End Date',
+            name:'checkinEndAtDate',
+            placeholder:'YYYY-mm-dd',
+            value:checkinEndAt.format('YYYY-M-D'),
+            date:true,
+            row:false
+            }) }}
+            {{ form.form_text({
+              columns:3,
+              label:'Checkin End Time',
+              name:'checkinEndAtTime',
+              placeholder:'HH:MM',
+              value:checkinEndAt.format('H:mm'),
+              time:true,
+              row:false
+            }) }}
+          </div>
+          <div class="row">
+            {{ form.form_text({
+            row:false,
+            columns:12,
+            label:'Tags',
+            help_text:'Split by \', \'.',
+            name:'tag',
+            value:tdoc['tag']|default([])|join(', ')
+            }) }}
+          </div>
           {{ form.form_text({
             columns:12,
             label:'Problems',
@@ -76,6 +134,13 @@
             label:'Description',
             name:'content',
             value:tdoc['content']|default(''),
+            markdown:true
+          }) }}
+          {{ form.form_textarea({
+            columns:null,
+            label:'ImportantDescription',
+            name:'importantContent',
+            value:tdoc['importantContent']|default(''),
             markdown:true
           }) }}
         </div>

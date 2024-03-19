@@ -10,16 +10,61 @@
     <p>{{ _('Technical Information') }}:</p>
     <p>{{ _('Type') }}: {{ error.name }}</p>
     <p>{{ _('Arguments') }}:
-      <ol>
+    <ol>
       {%- for param in error.params -%}
-        {% if instanceof(param, UserFacingError) %}
-          <li>{{ _(param.message).formatFromArray(param.params)}}</li>
-        {% else %}
-          <li>{{ param }}</li>
-        {% endif %}
+      {% if instanceof(param, UserFacingError) %}
+      <li>{{ _(param.message).formatFromArray(param.params)}}</li>
+      {% else %}
+      <li>{{ param }}</li>
+      {% endif %}
       {%- endfor -%}
-      </ol>
+    </ol>
     </p>
+    <div style="padding-top: 10px">
+      <div id="countdown">
+        <p id="countdownText"></p>
+      </div>
+    </div>
+    <div class="buttons-container" style="padding-top: 20px">
+      <el-button onclick="goBack()" type="primary">返回上一页</el-button>
+      <el-button onclick="goToHomePage()" type="success">返回主页</el-button>
+    </div>
+
   </div>
 </div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+
+    function goToHomePage() {
+        window.location.href = '/';
+    }
+
+    // countdown
+    let countdownSeconds = 60;
+
+    // JavaScript 函数，用于启动倒计时
+    function startCountdown() {
+        const countdownElement = document.getElementById('countdownText');
+        countdownElement.innerText = countdownSeconds + '秒后返回上一页';
+
+        const countdownInterval = setInterval(function () {
+            const countdownElement = document.getElementById('countdownText');
+            countdownSeconds--;
+            console.log("countdown", countdownSeconds)
+            countdownElement.innerText = countdownSeconds + '秒后返回上一页';
+
+            if (countdownSeconds <= 0) {
+                clearInterval(countdownInterval);
+                goBack();
+            }
+        }, 1000);
+    }
+
+    // 启动倒计时
+    startCountdown();
+</script>
 {% endblock %}
+

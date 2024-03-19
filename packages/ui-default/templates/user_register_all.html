@@ -1,0 +1,173 @@
+{% extends "layout/immersive.html" %}
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .main_register {
+        width: 100%;
+        height: 100vh;
+        background: #F2F2F2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .page_wrapper {
+        width: 375px;
+        background: #FFFFFF;
+        padding: 16px 0 71px 0;
+    }
+
+    h1 {
+        color: #101010;
+        font-size: 22px;
+        font-family: PingFangSC-bold;
+    }
+
+    em {
+        font-style: normal;
+    }
+
+    /* logo图片 */
+    .logo {
+        display: block;
+        width: 98px;
+        height: 92px;
+        margin: 36.98px 0 14px 48.62px;
+    }
+
+    /* 标题 */
+    .title {
+        display: block;
+        width: 223px;
+        height: 41px;
+        margin: 0 0 0 48.62px;
+    }
+
+    /* 注册方式 */
+    .register_mode {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .phone,
+    .email {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .phone span,
+    .email span {
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 14px;
+        font-family: PingFangSC-regular;
+    }
+
+    /* 电话图标 */
+    .icon_phone {
+        width: 66px;
+        height: 66px;
+        margin-bottom: 15px;
+    }
+
+    /* 邮箱图标 */
+    .icon_emial {
+        width: 62px;
+        height: 62px;
+        margin-bottom: 19px;
+    }
+
+    /* 下一步 */
+    .btn_next {
+        width: 248.45px;
+        height: 44px;
+        border-radius: 6px;
+        background-color: rgba(246, 122, 53, 1);
+        color: rgba(255, 255, 255, 1);
+        font-size: 14px;
+        text-align: center;
+        font-family: Roboto;
+        border: 1px solid rgba(187, 187, 187, 1);
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 返回 */
+    .return_box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 19px 0 16px;
+    }
+
+    .return_box .return {
+        display: flex;
+        align-items: center;
+    }
+
+    .return_box .return span {
+        color: rgba(74, 74, 74, 1);
+        font-size: 14px;
+        line-height: 20px;
+        font-family: PingFangSC-regular;
+    }
+
+    /* 返回图标 */
+    /* 关闭图标 */
+    /* 密码图标 */
+    .icon_arrow_left,
+    .icon_close,
+    .icon_password {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* 点击完成验证 */
+    .btn_verification {
+        width: 300px;
+        height: 48px;
+        display: block;
+    }
+</style>
+<style>
+    .sign_up_box {
+        width: 375px;
+        background: #FFFFFF;
+        padding-bottom: 27.02px;
+    }
+    .register_mode {
+        margin: 0 85.38px 42px 83.62px;
+    }
+    h1 {
+        margin: 40.02px 0 32.98px 49px;
+    }
+</style>
+<div class="main_register">
+  <div class="sign_up_box">
+    <img class="logo" src="/assets/logo.png" alt="">
+    <img class="title" src="/assets/title.png" alt="">
+    <h1>注册账户</h1>
+    <div class="register_mode">
+      <a href="register_phone">
+        <div class="phone">
+          <img class="icon_phone" src="/assets/icon_phone.png" alt="">
+          <span>手机号码注册</span>
+        </div>
+      </a>
+      <a href="register">
+        <div class="email">
+          <img class="icon_emial" src="/assets/icon_emial.png" alt="">
+          <span>邮箱地址注册</span>
+        </div>
+      </a>
+    </div>
+<!--    <div class="btn_next">下一步</div>-->
+  </div>
+</div>
+{% endblock %}

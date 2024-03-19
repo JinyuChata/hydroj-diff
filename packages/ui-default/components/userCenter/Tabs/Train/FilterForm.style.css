@@ -1,0 +1,27 @@
+.custom-antd-form-item {
+  .custom-label {
+    font-family: Microsoft YaHei;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: normal;
+    letter-spacing: 0em;
+
+    font-feature-settings: "kern" on;
+    color: #797979;
+
+    margin-bottom: 13px;
+  }
+}
+
+.filter-form-header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+}
+
+.filter-form-main {
+  margin-bottom: 30px;
+}

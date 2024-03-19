@@ -135,7 +135,6 @@ declare module '../context' {
 export async function apply(ctx: Context) {
     Context.service('worker', WorkerService);
     ctx.worker = Worker;
-
     Worker.addHandler('task.daily', async () => {
         await RecordModel.coll.deleteMany({ contest: { $in: [RecordModel.RECORD_PRETEST, RecordModel.RECORD_GENERATE] } });
         await global.Hydro.script.rp?.run({}, new Logger('task/rp').debug);

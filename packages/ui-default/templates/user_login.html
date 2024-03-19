@@ -1,46 +1,249 @@
 {% extends "layout/immersive.html" %}
 {% block content %}
-<div class="row"><div class="columns">
-  <div class="immersive--content immersive--center">
-    <h1>{{ _('Login') }}</h1>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .main_login {
+        width: 100%;
+        height: 100vh;
+        background: #F2F2F2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .page_wrapper {
+        width: 375px;
+        background: #FFFFFF;
+        padding: 16px 0 71px 0;
+    }
+
+    h1 {
+        color: #101010;
+        font-size: 22px;
+        font-family: PingFangSC-bold;
+    }
+
+    em {
+        font-style: normal;
+    }
+
+    /* logo图片 */
+    .logo {
+        display: block;
+        width: 98px;
+        height: 92px;
+        margin: 36.98px 0 14px 48.62px;
+    }
+
+    /* 标题 */
+    .title {
+        display: block;
+        width: 223px;
+        height: 41px;
+        margin: 0 0 0 48.62px;
+    }
+
+    /* 注册方式 */
+    .register_mode {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .phone,
+    .email {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .phone span,
+    .email span {
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 14px;
+        font-family: PingFangSC-regular;
+    }
+
+    /* 电话图标 */
+    .icon_phone {
+        width: 66px;
+        height: 66px;
+        margin-bottom: 15px;
+    }
+
+    /* 邮箱图标 */
+    .icon_emial {
+        width: 62px;
+        height: 62px;
+        margin-bottom: 19px;
+    }
+
+    /* 下一步 */
+    .btn_next {
+        width: 248.45px;
+        height: 44px;
+        border-radius: 6px;
+        background-color: rgba(246, 122, 53, 1);
+        color: rgba(255, 255, 255, 1);
+        font-size: 14px;
+        text-align: center;
+        font-family: Roboto;
+        border: 1px solid rgba(187, 187, 187, 1);
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 返回 */
+    .return_box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 19px 0 16px;
+    }
+
+    .return_box .return {
+        display: flex;
+        align-items: center;
+    }
+
+    .return_box .return span {
+        color: rgba(74, 74, 74, 1);
+        font-size: 14px;
+        line-height: 20px;
+        font-family: PingFangSC-regular;
+    }
+
+    /* 返回图标 */
+    /* 关闭图标 */
+    /* 密码图标 */
+    .icon_arrow_left,
+    .icon_close,
+    .icon_password {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* 点击完成验证 */
+    .btn_verification {
+        width: 300px;
+        height: 48px;
+        display: block;
+    }
+</style>
+<style>
+    .btn_close {
+        width: 24px;
+        height: 24px;
+        margin: 0 18px 0 auto;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .logo {
+        margin: 0 0 4.02px 48.62px;
+    }
+
+    .title {
+        margin: 0 0 2px 49px;
+    }
+
+    .username,
+    .password {
+        margin: 0 0 0 57px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .username span,
+    .password span {
+        color: rgb(16, 16, 16);
+        font-size: 14px;
+        font-family: PingFangSC-regular;
+    }
+
+    .username input,
+    .password input {
+        width: 235px;
+        height: 30px;
+        color: rgba(174, 174, 178, 1);
+        font-size: 16px;
+        font-family: Microsoft Yahei;
+        margin: 10px 0 2px 0;
+        box-sizing: border-box;
+        border: none;
+        outline: none;
+        border-radius: none;
+    }
+
+    .username input::placeholder,
+    .password input::placeholder {
+        color: rgba(174, 174, 178, 1);
+        font-size: 16px;
+        font-family: Microsoft Yahei;
+    }
+
+    .divider {
+        width: 300px;
+        background-color: rgba(255, 255, 255, 1);
+        border: 1px solid rgba(229, 229, 234, 1);
+        margin-bottom: 15px;
+    }
+
+    .code {
+        color: rgba(15, 64, 245, 1);
+        font-size: 12px;
+        font-family: PingFangSC-regular;
+        margin: 0 0 23px 57px;
+    }
+
+    .btn_verification {
+        margin: 0 auto 19px;
+    }
+
+    .options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 13px 36px 0 63px;
+        color: rgb(199, 199, 204);
+        font-size: 14px;
+        font-family: PingFangSC-regular;
+    }
+
+    .options p:last-child {
+        color: rgba(233, 78, 69, 1);
+    }
+</style>
+<div class="main_login">
+  <div class="page_wrapper">
+    <img class="btn_close" src="/assets/icon_close.png" alt="">
+    <img class="logo" src="/assets/logo.png" alt="">
+    <img class="title" src="/assets/title.png" alt="">
     <form method="POST">
-      {% if model.system.get('server.login') %}
-      <div class="row"><div class="columns">
-        <label class="inverse material textbox">
-          {{ _('Username') }}
-          <input name="uname" type="text" autofocus>
-        </label>
-      </div></div>
-      <div class="row"><div class="columns">
-        <label class="inverse material textbox">
-          {{ _('Password') }}
-          <input name="password" type="password">
-        </label>
-      </div></div>
-      <div class="row"><div class="columns">
-        <label class="inverse material checkbox" style="color:#fff;">
-          <input type="checkbox" name="rememberme" class="checkbox">{{ _('Remember me') }}
-        </label>
-      </div></div>
-      <div class="row"><div class="columns">
-        <input type="hidden" name="tfa" value="">
-        <input type="hidden" name="authnChallenge" value="">
-        <div class="text-center">
-          <input type="submit" value="{{ _('Login') }}" name="login_submit" class="inverse expanded rounded primary button">
-        </div>
-      </div></div>
-      {% endif %}
-      {%- for v in handler.loginMethods -%}
-        <div class="row"><div class="columns">
-          <a href="{{ url('user_oauth', type=v.id) }}" class="expanded rounded button inverse">{{ _(v.text) }}</a>
-        </div></div>
-      {%- endfor -%}
-      <div class="row"><div class="columns">
-        <div class="text-center supplementary inverse">
-          <a href="{{ url('user_lostpass') }}">{{ _('Forgot password or username?') }}</a>
-        </div>
-      </div></div>
+      <div class="username">
+        <span>用户名</span>
+        <input name="uname" autofocus type="text" placeholder="请输入用户名"/>
+        <div class="divider"></div>
+      </div>
+      <div class="password">
+        <span>密码</span>
+        <input name="password" type="password" placeholder="请输入密码"/>
+        <div class="divider"></div>
+      </div>
+<!--      <div class="code">短信验证码登录</div>-->
+      <img class="btn_verification" src="/assets/btn_verification.png" alt="">
+      <input class="btn_next" type="submit" value="登录" name="login_submit">
+      <div class="options">
+        <a href="{{ url('user_lostpass_all') }}">忘记密码</a>
+        <a href="register">邮箱注册</a>
+        <a href="register_phone">手机注册</a>
+      </div>
     </form>
   </div>
-</div></div>
+</div>
 {% endblock %}

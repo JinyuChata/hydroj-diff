@@ -1,125 +1,208 @@
-{% extends "layout/basic.html" %}
-{% block content %}
+{% if UserContext %}{% include "partials/nav.html" %}{% endif %} {% extends
+"layout/basic_new.html" %} {% block script %}
 <script>
-{{ set(UiContext, {
-  problemId: pdoc.pid|default(pdoc.docId),
-  problemNumId: pdoc.docId,
-  codeLang: handler.user.codeLang,
-  codeTemplate: handler.user.codeTemplate,
-  pdoc: pdoc
-}) }}
-{% if tdoc %}
-  {{ set(UiContext, 'canViewRecord', model.contest.canShowSelfRecord.call(handler, tdoc)) }}
-  {{ set(UiContext, 'postSubmitUrl', url('problem_submit', pid=pdoc.docId, query={tid:tdoc.docId})) }}
-  {{ set(UiContext, 'getSubmissionsUrl', url('record_main', query={fullStatus:'true', pid:pdoc.docId, tid:tdoc.docId})) }}
-  {{ set(UiContext, 'getRecordDetailUrl', url('record_detail', rid='{rid}', query={tid:tdoc.docId})) }}
-  {{ set(UiContext, 'pretestConnUrl', "record-conn?pretest=1&uidOrName=" + handler.user._id + "&pid=" + pdoc.docId + "&domainId=" + handler.args.domainId + "&tid=" + tdoc.docId) }}
-  {{ set(UiContext, 'tdoc', tdoc) }}
-  {{ set(UiContext, 'tsdoc', tsdoc) }}
-{% else %}
-  {{ set(UiContext, 'canViewRecord', true) }}
-  {{ set(UiContext, 'postSubmitUrl', url('problem_submit', pid=pdoc.docId)) }}
-  {{ set(UiContext, 'getSubmissionsUrl', url('record_main', query={fullStatus:'true', pid:pdoc.docId})) }}
-  {{ set(UiContext, 'getRecordDetailUrl', url('record_detail', rid='{rid}')) }}
-  {{ set(UiContext, 'pretestConnUrl', "record-conn?pretest=1&uidOrName=" + handler.user._id + "&pid=" + pdoc.docId + "&domainId=" + handler.args.domainId) }}
-{% endif %}
+  {{ set(UiContext, {
+    problemId: pdoc.pid|default(pdoc.docId),
+    problemNumId: pdoc.docId,
+    codeLang: handler.user.codeLang,
+    codeTemplate: handler.user.codeTemplate,
+    pdoc: pdoc,
+    starred: psdoc.star
+  }) }}
+  {% if tdoc %}
+    {{ set(UiContext, 'canViewRecord', model.contest.canShowSelfRecord.call(handler, tdoc)) }}
+    {{ set(UiContext, 'postSubmitUrl', url('problem_submit', pid=pdoc.docId, query={tid:tdoc.docId})) }}
+    {{ set(UiContext, 'getSubmissionsUrl', url('record_main', query={fullStatus:'true', pid:pdoc.docId, tid:tdoc.docId})) }}
+    {{ set(UiContext, 'getRecordDetailUrl', url('record_detail', rid='{rid}', query={tid:tdoc.docId})) }}
+    {{ set(UiContext, 'pretestConnUrl', "record-conn?pretest=1&uidOrName=" + handler.user._id + "&pid=" + pdoc.docId + "&domainId=" + handler.args.domainId + "&tid=" + tdoc.docId) }}
+    {{ set(UiContext, 'tdoc', tdoc) }}
+    {{ set(UiContext, 'tsdoc', tsdoc) }}
+  {% else %}
+    {{ set(UiContext, 'canViewRecord', true) }}
+    {{ set(UiContext, 'postSubmitUrl', url('problem_submit', pid=pdoc.docId)) }}
+    {{ set(UiContext, 'getSubmissionsUrl', url('record_main', query={fullStatus:'true', pid:pdoc.docId})) }}
+    {{ set(UiContext, 'getRecordDetailUrl', url('record_detail', rid='{rid}')) }}
+    {{ set(UiContext, 'pretestConnUrl', "record-conn?pretest=1&uidOrName=" + handler.user._id + "&pid=" + pdoc.docId + "&domainId=" + handler.args.domainId) }}
+  {% endif %}
 </script>
-<div class="row" data-sticky-parent>
-  <div class="medium-9 columns">
-    <div class="section">
-      <div class="section__header">
-        <h1 class="section__title">
-          {% if rdoc %}
-            <a href="{{ url('record_detail', {rid:rdoc._id}) }}">
-              <span class="icon record-status--icon {{ model.builtin.STATUS_CODES[rdoc['status']] }}"></span>
-              <span class="record-status--text {{ model.builtin.STATUS_CODES[rdoc['status']] }}">{{ rdoc.score }}</span>
-            </a>
-          {% endif %}
-          {% if handler.user.hasPriv(PRIV.PRIV_USER_PROFILE) and not tdoc %}
-            <form class="form--inline" action="{{ url('problem_main') }}" method="post">
-              <input type="hidden" name="pid" value="{{ pdoc.docId }}">
-              <input type="hidden" name="operation" value="{{ "star" if not psdoc.star else "unstar" }}">
-              <button class="star{% if psdoc.star %} activated{% endif %}" type="submit">
-                <span class="starred--hide"><span class="icon icon-star--outline" data-tooltip="{{ _('Star') }}"></span></span>
-                <span class="starred--show"><span class="icon icon-star" data-tooltip="{{ _('Unstar') }}"></span></span>
-              </button>
-            </form>
-          {% endif %}
-          #{{ String.fromCharCode(65+tdoc.pids.indexOf(pdoc.docId)) if tdoc else pdoc.pid|default(pdoc.docId) }}. {{ pdoc.title }}
-        </h1>
-        {% if tdoc %}
-          <div class="section__tools contest-problems">
-            {% for pid in tdoc.pids -%}
-              {% set status = tsdoc.detail[pid].status %}
-              {% set pass = status == STATUS.STATUS_ACCEPTED %}
-              {% set fail = status and not pass %}
-              <a href="{{ url('problem_detail', pid=pid, query={tid:tdoc.docId}) }}"
-                 class="{% if pass %}pass{% elif fail %}fail{% endif %}
-                        {% if pid==pdoc.docId %} active{% endif %}">
-                <span class="id">{{ String.fromCharCode(65+loop.index0) }}</span>
-                {% if status %}<span class="icon icon-{% if pass %}check{% else %}close{% endif %}"></span>{% endif %}
-              </a>
-            {%- endfor %}
-          </div>
-        {% endif %}
+
+{% endblock %} {% block content %}
+
+<div id="vue-root">
+  <!-- 标题 -->
+  <div class="title" style="margin: 33px 0 25px 0">
+    <div style="display: flex; height: 50px; line-height: 50px" class="w">
+      <div
+        style="
+          font-size: 20px;
+          font-weight: 700;
+          margin-left: 30px;
+          position: relative;
+        "
+      >
+        CODEMATE
+        <div class="titleBorder"></div>
       </div>
-      <div class="section__body">
-        <ul class="problem__tags">
-          {% if not tdoc %}
-            <span class="bp5-tag bp5-large bp5-minimal problem__tag-item">{{ _('ID') }}: {{ pdoc.docId }}</span>
-          {% endif %}
-          <span class="bp5-tag bp5-large bp5-minimal problem__tag-item icon icon-book">{{ _('problem_type.' + pdoc.config.type).format(pdoc.config.subType) }}</span>
-          {% if pdoc.config.type == 'default' and pdoc.config.subType %}
-            <span class="bp5-tag bp5-large bp5-minimal problem__tag-item icon icon-book">{{ _('File IO: {0}').format(pdoc.config.subType) }}</span>
-          {% endif %}
-          {% if pdoc.config.type != 'objective' and pdoc.config.type != 'submit_answer' %}
-            <span class="bp5-tag bp5-large bp5-minimal problem__tag-item icon icon-stopwatch">{{ pdoc.config.timeMax if pdoc.config.timeMax == pdoc.config.timeMin else pdoc.config.timeMin+'~'+pdoc.config.timeMax }}ms</span>
-            <span class="bp5-tag bp5-large bp5-minimal problem__tag-item icon icon-comparison">{{ pdoc.config.memoryMax if pdoc.config.memoryMax == pdoc.config.memoryMin else pdoc.config.memoryMin+'~'+pdoc.config.memoryMax }}MiB</span>
-          {% endif %}
-          {% if not tdoc %}
-            <a class="bp5-tag bp5-large bp5-minimal bp5-interactive problem__tag-item" href="{{ url('record_main', query={pid:pdoc.docId}) }}">{{ _('Tried') }}: {{ pdoc.nSubmit }}</a>
-            <a class="bp5-tag bp5-large bp5-minimal bp5-interactive problem__tag-item" href="{{ url('record_main', query={pid:pdoc.docId, status:1}) }}">{{ _('Accepted') }}: {{ pdoc.nAccept if ((not tdoc) or showAccept) else '?' }}</a>
-            <span class="bp5-tag bp5-large bp5-minimal problem__tag-item">{{ _('Difficulty') }}: {{ pdoc['difficulty'] or lib.difficulty(pdoc.nSubmit, pdoc.nAccept) or _('(None)') }}</span>
-            <span class="bp5-tag bp5-large bp5-minimal bp5-interactive problem__tag-item">{{ _('Uploaded By') }}: {{ user.render_inline(udoc, badge=false) }}</span>
-          {% endif %}
-          {% if pdoc.tag.length %}
-            <span name="show_tags" class="bp5-tag bp5-large bp5-minimal bp5-interactive problem__tag-item nojs--hide icon icon-tag">{{ _('Tags') + '>' }}</span>
-            {%- for tag in pdoc.tag -%}
-              <span class="bp5-tag bp5-large bp5-minimal problem__tag-item tags hasjs--hide">{{ tag }}</span>
-            {%- endfor -%}
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-    <div class="section">
-      <div class="problem-content-container"><div class="problem-content" data-marker-enabled>
-        <div class="section__header non-scratchpad--hide">
-          <h1 class="section__title">{{ pdoc.title }}</h1>
-        </div>
-        {% if pdoc.content|contentLang|length > 1 %}
-        <div class="section__tab-container">
-          <div class="section__tab-header-wrapper">
-            <ul class="section__tab-header flex-row">
-              {% for k in pdoc.content|contentLang %}
-              <a class="section__tab-header-item {{'tab--active' if (handler.request.query.lang or handler.user.viewLang or handler.session.viewLang or (pdoc.content|contentLang)[0] ) == k }}" data-lang="{{ k }}" href="./{{pdoc.pid|default(pdoc.docId)}}?lang={{k}}">
-                {{ model.setting.SETTINGS_BY_KEY['viewLang'].range[k] }}
-              </a>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-        {% endif %}
-        {% include "partials/problem_description.html" %}
-      </div></div>
+      <span
+        style="
+          font-size: 20px;
+          color: #333;
+          margin-left: 20px;
+          font-weight: 400;
+        "
+        >修炼场</span
+      >
+      <span
+        style="
+          font-size: 20px;
+          color: #333;
+          margin-left: 12px;
+          font-weight: 400;
+        "
+        >编程题</span
+      >
     </div>
   </div>
-  <div class="medium-3 columns"><div data-sticky="large">
-    {% include "partials/problem_sidebar.html" %}
-  </div></div>
+  <div class="bottom w">
+    <div class="topicTop">
+      <div class="topicTop-left">
+        {{ String.fromCharCode(65+tdoc.pids.indexOf(pdoc.docId)) if tdoc else
+        pdoc.pid|default(pdoc.docId) }}：{{pdoc.title}}
+      </div>
+      <div class="topicTop-right" style="cursor: pointer">
+        <div class="topicTop-tag" style="display: none;" id="star-btn">收藏</div>
+        <div
+          class="topicTop-tag starred"
+          style="color: #ffffff; display: none;"
+          id="unstar-btn"
+        >
+          已收藏
+        </div>
+      </div>
+    </div>
+    <div class="topicLabel">
+      <span
+        >知识点： {%- for tag in pdoc.tag -%} {{ tag }} {{' '}} {%- endfor -%}
+      </span>
+      <!--      <span>偏好：趣味题</span>-->
+      <!--      <span>响应值</span>-->
+      <!--      <span>容量值</span>-->
+      <span
+        >难度值：{{ pdoc['difficulty'] or lib.difficulty(pdoc.nSubmit,
+        pdoc.nAccept) or _('(None)') }}</span
+      >
+      <span>尝试： {{ pdoc.nSubmit }}</span>
+      <span>AC：{{ pdoc.nAccept if ((not tdoc) or showAccept) else '?' }}</span>
+      <span>上传者：</span>
+      <!--      <span>来源：原创</span>-->
+      <!--      <span>命题者：李四</span>-->
+    </div>
+
+    <div class="topicBottom">
+      <div class="topicBottom-left">
+        <div class="problem-content-container">
+          <div class="problem-content" data-marker-enabled>
+            {% if pdoc.content|contentLang|length > 1 %}
+            <div class="section__tab-container">
+              <div class="section__tab-header-wrapper">
+                <ul class="section__tab-header flex-row">
+                  {% for k in pdoc.content|contentLang %}
+                  <a
+                    class="section__tab-header-item {{'tab--active' if (handler.request.query.lang or handler.user.viewLang or handler.session.viewLang or (pdoc.content|contentLang)[0] ) == k }}"
+                    data-lang="{{ k }}"
+                    href="./{{pdoc.pid|default(pdoc.docId)}}?lang={{k}}"
+                  >
+                    {{ model.setting.SETTINGS_BY_KEY['viewLang'].range[k] }}
+                  </a>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+            {% endif %} {% include "partials/problem_description.html" %}
+          </div>
+        </div>
+
+        {% if pdoc.config.type === "default" %}
+
+        <h3 style="margin: 30px 0 10px 0">提交代码</h3>
+        <div style="color: #797979; font-size: 16px">编译器</div>
+        <div class="tags">
+          <div
+            class="tags-submit"
+            style="color: #ff7d37; border: 1px solid #ff7d37"
+          >
+            C++
+          </div>
+          <!--            <div class="tags-submit" style="color: #3D3D3D;border: 1px solid #F1F1F1;">Python</div>-->
+          <!--            <div class="tags-submit" style="color: #3D3D3D;border: 1px solid #F1F1F1;">C++</div>-->
+        </div>
+        <textarea
+          id="code-input"
+          style="
+            width: 100%;
+            min-height: 300px;
+            border-radius: 8px;
+            margin: 10px 0px;
+            padding: 5px;
+          "
+        ></textarea>
+        <!--          <div style="height: 268px;border: 1px solid #F1F1F1;margin:30px 0"></div>-->
+        <div class="tags">
+          <div
+            class="tags-submit"
+            style="color: #fff; background: #ff7d37; cursor: pointer"
+            id="submit-btn"
+          >
+            确认提交
+          </div>
+          <!--                  <div class="tags-submit" style="color: #FF7D37;">回答正确</div>-->
+          <!--                  <div class="tags-submit" style="color: #ff7d37;border: 1px solid #FF7D37;">AI推题</div>-->
+          <!--                  <div class="tags-submit" style="color: #3D3D3D;border: 1px solid #F1F1F1;">上难度</div>-->
+          <!--                  <div class="tags-submit" style="color: #3D3D3D;border: 1px solid #F1F1F1;">评价</div>-->
+          <!--                  <div class="tags-submit" style="color: #3D3D3D;border: 1px solid #F1F1F1;">重新选题</div>-->
+          <!--                  <div class="tags-submit" style="color: #fff;background: #2E77E3;">分享</div>-->
+          <!--                  <div class="tags-submit" style="color: #fff;background: #FF7D37;">PK邀请</div>-->
+        </div>
+
+        {% endif %}
+      </div>
+      <div class="topicBottom-right">
+        <!--              <div>进入在线编程模式</div>-->
+        {% if pdoc.config.type === "default" %}
+        <div
+          style="cursor: pointer"
+          name="problem-sidebar__open-scratchpad"
+          id="reactive-entry"
+        >
+          进入在线编程模式
+        </div>
+        {% endif %}
+        <div>
+          <a href="{{pdoc.docId}}/solution"
+            >文字题讲解 {% if solutionCount %} ({{ solutionCount }}) {% endif %}
+          </a>
+        </div>
+        <!--              <div>讲题视频（1）</div>-->
+        <!--              <div>名师评题（预约）</div>-->
+        <!--              <div>知识点讲解视频（2）</div>-->
+        <!--              <div>名师讲解知识点（预约）</div>-->
+        <!--              <div>复制该题</div>-->
+        <div>
+          <a href="/discuss/problem/{{pdoc.docId}}">
+            去论坛看看该题 {% if discussionCount !== undefined %} ({{
+            discussionCount }}) {% endif %}
+          </a>
+        </div>
+        <div>提交记录</div>
+      </div>
+    </div>
+  </div>
 </div>
 <div style="display:none" class="outer-loader-container"><div class="loader"></div></div>
-<div class="scratchpad-container" style="display:none">
-  <div style="display:none" class="loader-container"><div class="loader"></div></div>
-  <div id="scratchpad" style="opacity:0"></div>
+<div class="scratchpad-container" style="display: none">
+  <div style="display: none" class="loader-container">
+    <div class="loader"></div>
+  </div>
+  <div id="scratchpad" style="opacity: 0"></div>
 </div>
 {% endblock %}

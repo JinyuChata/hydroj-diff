@@ -23,6 +23,8 @@ export const PERM = {
     PERM_VIEW_PROBLEM_HIDDEN: 1n << 8n,
     PERM_SUBMIT_PROBLEM: 1n << 9n,
     PERM_READ_PROBLEM_DATA: 1n << 10n,
+    PERM_VIEW_PROBLEM_PAID_ACCESS: 1n << 70n,
+    PERM_SUBMIT_PROBLEM_PAID_ACCESS: 1n << 71n,
 
     // Record
     PERM_READ_RECORD_CODE: 1n << 12n,
@@ -114,6 +116,8 @@ export const PERMS = [
     Permission('perm_problem', PERM.PERM_VIEW_PROBLEM_HIDDEN, 'View hidden problems'),
     Permission('perm_problem', PERM.PERM_SUBMIT_PROBLEM, 'Submit problem'),
     Permission('perm_problem', PERM.PERM_READ_PROBLEM_DATA, 'Read data of problem'),
+    Permission('perm_problem', PERM.PERM_VIEW_PROBLEM_PAID_ACCESS, '题目需要付费才能查看'),
+    Permission('perm_problem', PERM.PERM_SUBMIT_PROBLEM_PAID_ACCESS, '题目需要付费才能提交'),
     Permission('perm_record', PERM.PERM_READ_RECORD_CODE, 'Read all record codes'),
     Permission('perm_record', PERM.PERM_READ_RECORD_CODE_ACCEPT, 'Read record codes after accept'),
     Permission('perm_record', PERM.PERM_REJUDGE_PROBLEM, 'Rejudge problems'),

@@ -1,40 +1,11 @@
 {% set page_name = "homepage" %}
-    123123123
-{% extends "layout/basic.html" %}
 {% import "components/contest.html" as contest with context %}
 {% import "components/problem.html" as problem with context %}
 {% import "components/user.html" as user with context %}
+
+{% if UserContext %}{% include "partials/nav.html" %}{% endif %}
+{% extends "layout/basic_new.html" %}
+
 {% block content %}
-<div id="app1">
-    <el-row>
-        <el-button @click="open">默认按钮</el-button>
-        <el-button type="primary" @click="open">主要按钮</el-button>
-        <el-button type="success" @click="open">成功按钮</el-button>
-        <el-button type="info" @click="open">信息按钮</el-button>
-        <el-button type="warning" @click="open">警告按钮</el-button>
-        <el-button type="danger" @click="open">危险按钮</el-button>
-    </el-row>
-</div>
-<div class="row">
-{#  {% for column in contents %}#}
-{#    <div class="large-{{ column.width }} columns">#}
-{#      {% for s in column.sections %}#}
-{#        {% if templateExists("partials/homepage/" + s[0] + ".html") %}#}
-{#          {% set payload = s[1] %}#}
-{#          {% include "partials/homepage/" + s[0] + ".html" %}#}
-{#        {% else %}#}
-{#          {% set payload = _("Template {0} not found.").format(s[0]) %}#}
-{#          {% include "partials/homepage/error.html" %}#}
-{#        {% endif %}#}
-{#      {% endfor %}#}
-{#    </div>#}
-{#  {% endfor %}#}
-</div>
-    <script>
-    // 创建vue
-    new Vue({
-        // 控制的标签容器
-        el: '#app1',
-    })
-</script>
+<div id="root" style="padding: 0;"></div>
 {% endblock %}

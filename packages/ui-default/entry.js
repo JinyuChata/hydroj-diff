@@ -36,8 +36,8 @@ if ('serviceWorker' in navigator) {
     console.log('SW registration failed: ', registrationError);
   });
 }
-
-const PageLoader = '<div class="page-loader nojs--hide" style="display:none;"><div class="loader"></div></div>';
+// delete pageloader
+const PageLoader = '';
 $('body').prepend(PageLoader);
 $('.page-loader').fadeIn(500);
 

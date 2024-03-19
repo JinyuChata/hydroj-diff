@@ -1,0 +1,22 @@
+{% extends "layout/immersive.html" %}
+{% block content %}
+<div class="row"><div class="columns">
+  <div class="immersive--content immersive--center">
+    <h1>{{ _('Sign Up') }}</h1>
+    <form method="POST" captcha>
+      <div class="row"><div class="columns">
+        <label class="inverse material textbox">
+          {{ _('Phone') }}
+          <input name="phone" type="text" autofocus>
+        </label>
+      </div></div>
+      <div class="row"><div class="columns">
+        <div class="text-center">
+          {{ captcha|safe }}
+          <input id="submit" type="submit" value="验证手机号" class="inverse expanded rounded primary button">
+        </div>
+      </div></div>
+    </form>
+  </div>
+</div></div>
+{% endblock %}

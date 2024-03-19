@@ -60,7 +60,7 @@ export class ProblemModel {
     static PROJECTION_LIST: Field[] = [
         ...ProblemModel.PROJECTION_CONTEST_LIST,
         'nSubmit', 'nAccept', 'difficulty', 'tag', 'hidden',
-        'stats',
+        'stats', 'assign', 'brief'
     ];
 
     static PROJECTION_CONTEST_DETAIL: Field[] = [
@@ -120,13 +120,14 @@ export class ProblemModel {
     static async add(
         domainId: string, pid: string = '', title: string, content: string, owner: number,
         tag: string[] = [], meta: { difficulty?: number, hidden?: boolean } = {},
+        assign: string[] = [], brief: string = ''
     ) {
         const [doc] = await ProblemModel.getMulti(domainId, {})
             .sort({ docId: -1 }).limit(1).project({ docId: 1 })
             .toArray();
         const result = await ProblemModel.addWithId(
             domainId, (doc?.docId || 0) + 1, pid,
-            title, content, owner, tag, meta,
+            title, content, owner, tag, meta, assign, brief
         );
         return result;
     }
@@ -135,12 +136,15 @@ export class ProblemModel {
         domainId: string, docId: number, pid: string = '', title: string,
         content: string, owner: number, tag: string[] = [],
         meta: { difficulty?: number, hidden?: boolean } = {},
+        assign: string[] = [], brief = ''
     ) {
         const args: Partial<ProblemDoc> = {
-            title, tag, hidden: meta.hidden || false, nSubmit: 0, nAccept: 0, sort: sortable(pid || `P${docId}`),
+            title, tag, hidden: meta.hidden || false, nSubmit: 0, nAccept: 0, sort: sortable(pid || `P${docId}`), brief
         };
         if (pid) args.pid = pid;
         if (meta.difficulty) args.difficulty = meta.difficulty;
+        if (assign.length > 0) args.assign = assign
+        console.log("args", args)
         await bus.parallel('problem/before-add', domainId, content, owner, docId, args);
         const result = await document.add(domainId, content, owner, document.TYPE_PROBLEM, docId, null, null, args);
         args.content = content;
@@ -157,6 +161,8 @@ export class ProblemModel {
         rawConfig = false,
     ): Promise<ProblemDoc | null> {
         if (Number.isSafeInteger(+pid)) pid = +pid;
+        console.log("projection")
+        console.log(projection)
         const res = typeof pid === 'number'
             ? await document.get(domainId, document.TYPE_PROBLEM, pid, projection)
             : (await document.getMulti(domainId, document.TYPE_PROBLEM, { sort: sortable(pid), pid }).toArray())[0];
@@ -433,6 +439,17 @@ export class ProblemModel {
         return document.setStatus(domainId, document.TYPE_PROBLEM, pid, uid, { star });
     }
 
+    static haveIntersection(array1: string[], array2: string[]) {
+        const set1 = new Set(array1);
+        const set2 = new Set(array2);
+        for (const value of set1) {
+            if (set2.has(value)) {
+                return true; // 如果找到交集，返回 true
+            }
+        }
+        return false;
+    }
+
     static canViewBy(pdoc: ProblemDoc, udoc: User) {
         if (!udoc.hasPerm(PERM.PERM_VIEW_PROBLEM)) return false;
         if (udoc.own(pdoc)) return true;
@@ -440,6 +457,23 @@ export class ProblemModel {
         if (pdoc.hidden) return false;
         return true;
     }
+
+    static canViewByGroup(pdoc: ProblemDoc, udoc: User, groups: string[] = []) {
+        console.log("canViewByGroup")
+        if (!udoc.hasPerm(PERM.PERM_VIEW_PROBLEM)) return false;
+        if (udoc.own(pdoc)) return true;
+        if (udoc.hasPerm(PERM.PERM_VIEW_PROBLEM_HIDDEN)) return true;
+        if (pdoc.hidden) return false;
+        console.log("canViewByGroup1")
+        console.log(pdoc.assign)
+        console.log(groups)
+        if (pdoc.assign && pdoc.assign.length > 0 && !this.haveIntersection(pdoc.assign, groups)) {
+            return false;
+        }
+        return true;
+    }
+
+
 
     static async import(domainId: string, filepath: string, operator = 1, preferredPrefix?: string) {
         let tmpdir = '';

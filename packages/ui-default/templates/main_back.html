@@ -1,0 +1,389 @@
+{% set page_name = "homepage" %}
+    123123123
+{% extends "layout/basic.html" %}
+{% import "components/contest.html" as contest with context %}
+{% import "components/problem.html" as problem with context %}
+{% import "components/user.html" as user with context %}
+
+{% block content %}
+<div class="row">
+
+<!-- banner start -->
+<el-carousel height="250px" style="margin: 10px;">
+      <el-carousel-item v-for="item in 4" :key="item" style="background: #AAAAAA">
+        <h3 class="small">{{ item }}</h3>123
+      </el-carousel-item>
+    </el-carousel>
+<!-- banner end -->
+
+
+<el-row style="margin: 10px 10px 0px;">
+  <el-col :span="5"><a href="{{ url('problem_main') }}" style="color: inherit; text-decoration: none;">
+          <el-button><i class="el-icon-edit"></i> 修炼场</el-button></a></el-col>
+
+  <el-col :span="5"><a href="{{ url('contest_main') }}" style="color: inherit; text-decoration: none;">
+          <el-button><i class="el-icon-soccer"></i> 竞技场</el-button></a></el-col>
+
+  <el-col :span="5"><a href="{{ url('ranking') }}" style="color: inherit; text-decoration: none;">
+          <el-button><i class="el-icon-trophy"></i> 封神榜</el-button></a></el-col>
+
+  <el-col :span="5"><a href="{{ url('discussion_main') }}" style="color: inherit; text-decoration: none;">
+          <el-button><i class="el-icon-user-solid"></i> 觉醒 Space</el-button></a></el-col>
+  <el-col :span="4" style="display: flex; justify-content: flex-end;">
+    <el-button><i class="el-icon-notebook-2"></i>觉醒 Blog(不可用)</el-button>
+  </el-col>
+</el-row>
+
+{#<div style="margin: 15px;">#}
+{#  <el-input placeholder="请输入内容" v-model="input3" class="input-with-select">#}
+{#    <el-select v-model="select" slot="prepend" placeholder="请选择" style="width: 130px">#}
+{#      <el-option label="餐厅名" value="1"></el-option>#}
+{#      <el-option label="订单号" value="2"></el-option>#}
+{#      <el-option label="用户电话" value="3"></el-option>#}
+{#    </el-select>#}
+{#    <el-button slot="append" icon="el-icon-search"></el-button>#}
+{#  </el-input>#}
+{#</div>#}
+
+<el-row>
+  <el-col :span="8">
+    <el-card class="box-card" style="margin: 15px;">
+      <div slot="header" class="clearfix" style="display: table; width: 100%;">
+        <span><i class="el-icon-message"></i> 重要通知(不可用)</span>
+        <el-button style="float: right; padding: 3px 0" type="text">更多</el-button>
+      </div>
+      <ul>
+        <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="flex-grow: 1;">通知内容1</span>
+          <span style="color: #999; font-size: 12px;">2023-01-01</span>
+        </li>
+        <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="flex-grow: 1;">通知内容2</span>
+          <span style="color: #999; font-size: 12px;">2023-01-02</span>
+        </li>
+        <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="flex-grow: 1;">通知内容3</span>
+          <span style="color: #999; font-size: 12px;">2023-01-03</span>
+        </li>
+      </ul>
+    </el-card>
+  </el-col>
+  <el-col :span="8">
+    <el-card class="box-card" style="margin: 15px;">
+      <div slot="header" class="clearfix" style="display: table; width: 100%;">
+        <span><i class="el-icon-time"></i> 比赛倒计时</span>
+        <el-button style="float: right; padding: 3px 0" type="text">
+{#            <a href="{{ url('contest_main') }}" >{{ _('More') }} ></a>#}
+            <a href="{{ url('contest_main') }}" style="color: inherit; text-decoration: none;">{{ _('More') }} </a>
+        </el-button>
+      </div>
+      <ul>
+      {% if firstpages['contest'][0].length %}
+      {%- for tdoc in firstpages['contest'][0] -%}
+        <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="flex-grow: 1;"><a href="{{ url('contest_detail', tid=tdoc.docId) }}" data-emoji-enabled>{{ tdoc.title }}</a></span>
+          <span style="color: #999; font-size: 12px;">{{ datetimeSpan(tdoc['beginAt'], false, 'YYYY-MM-DD')|safe }}</span>
+{#        <li class="section__list__item contest__item contest-type--{{ tdoc.rule }} {% if model.contest.isOngoing(tdoc, tsdoc) %}{{ 'live' }}{% elif model.contest.isUpcoming(tdoc) %}{{ 'ready' }}{% endif %}">#}
+{#          <div class="media">#}
+{#            <div class="media__left medium">#}
+{#              <div class="contest__date numbox">#}
+{#                <div class="numbox__num large">{{ datetimeSpan(tdoc['beginAt'], false, 'D')|safe }}</div>#}
+{#                <div class="numbox__text">{{ datetimeSpan(tdoc['beginAt'], false, 'YYYY-M')|safe }}</div>#}
+{#              </div>#}
+{#            </div>#}
+{#            <div class="media__body medium">#}
+{#              <h1 class="contest__title"><a href="{{ url('contest_detail', tid=tdoc.docId) }}" data-emoji-enabled>{{ tdoc.title }}</a></h1>#}
+{#            </div>#}
+{#          </div>#}
+{#        </li>#}
+
+        </li>
+      {%- endfor -%}
+      {% endif %}
+      </ul>
+    </el-card>
+  </el-col>
+  <el-col :span="8">
+    <el-card class="box-card" style="margin: 15px;">
+      <div slot="header" class="clearfix" style="display: table; width: 100%;">
+        <span><i class="el-icon-news"></i> 行业新闻(不可用)</span>
+        <el-button style="float: right; padding: 3px 0" type="text">更多</el-button>
+      </div>
+      <ul>
+        <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="flex-grow: 1;">新闻内容1</span>
+          <span style="color: #999; font-size: 12px;">昨天</span>
+        </li>
+        <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="flex-grow: 1;">新闻内容2</span>
+          <span style="color: #999; font-size: 12px;">3天前</span>
+        </li>
+        <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="flex-grow: 1;">新闻内容3</span>
+          <span style="color: #999; font-size: 12px;">一周前</span>
+        </li>
+      </ul>
+    </el-card>
+  </el-col>
+</el-row>
+
+
+      <div class="section display-mode" style="margin: 15px;">
+        <div class="section__body no-padding">
+          <form method="get" id="searchForm" action="{{ url('problem_main') }}">
+            <div class="search">
+              <input name="q" type="text" value="{{ qs }}" placeholder="{{ _('Search') }}">
+              {% include "partials/problem_stat.html" %}
+              <button type="submit">
+                <span class="icon icon-search"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+{#        <div class="section__body no-padding">#}
+{#          {% include "partials/problem_list.html" %}#}
+{#        </div>#}
+      </div>
+
+  <div>
+    <el-card class="box-card" style="margin: 15px;">
+      <!-- 第一行：所属题库 -->
+      <div style="margin-bottom: 15px;">
+        <span>所属题库(不可用)：</span>
+        <el-button type="primary">洛谷</el-button>
+        <el-button type="success">一本通</el-button>
+        <el-button type="info">codeforces</el-button>
+      </div>
+
+      <!-- 第二行：筛选条件 -->
+      <div style="margin-bottom: 15px;">
+        <span>筛选条件(不可用)：</span>
+        <el-select placeholder="难度">
+          <el-option label="条件1选项1" value="1" selected></el-option>
+          <el-option label="条件1选项2" value="2"></el-option>
+        </el-select>
+        <el-select placeholder="地域">
+          <el-option label="条件2选项1" value="1"></el-option>
+          <el-option label="条件2选项2" value="2" selected></el-option>
+        </el-select>
+        <el-select placeholder="年份">
+          <el-option label="条件3选项1" value="1" selected></el-option>
+          <el-option label="条件3选项2" value="2"></el-option>
+        </el-select>
+      </div>
+
+      <!-- 第三行：已选择 -->
+      <div style="margin-bottom: 15px;">
+        <span>已选择(不可用)：</span>
+        <span>题库1, 题库3</span>
+        <span>条件1选项1, 条件2选项2, 条件3选项1</span>
+      </div>
+    </el-card>
+  </div>
+
+    <!--题库展示 start-->
+
+<el-card class="box-card" style="margin: 15px;">
+    <div slot="header" class="clearfix">
+        <span><i class="el-icon-edit-outline"></i> 修炼场 </span>
+        <el-button style="float: right; padding: 3px 0" type="text">
+            <a href="{{ url('problem_main') }}" style="color: inherit; text-decoration: none;">{{ _('More') }} </a>
+        </el-button>
+    </div>
+
+
+{% set pdocs = firstpages['recent_problems1'][0] %}
+  <table class="data-table hide-problem-tag" style="width: 100%;">
+    <colgroup>
+    {% if handler.user.hasPriv(PRIV.PRIV_USER_PROFILE) %}
+      <col class="col--status edit-mode-hide" style="width: 10%;">
+    {% endif %}
+      <col class="col--name">
+      <col class="col--ac-tried" style="width: 10%;">
+      <col class="col--difficulty" style="width: 10%;">
+    </colgroup>
+    <thead>
+      <tr>
+        {% if handler.user.hasPriv(PRIV.PRIV_USER_PROFILE) %}
+          <th class="col--status record-status--border edit-mode-hide">{{ _('Status') }}</th>
+        {% endif %}
+        <th class="col--name">{{ _('Problem') }}
+          <span class="nojs--hide toggle-tag tag--hide">{{ _('Show tags') }}</span>
+          <span class="nojs--hide toggle-tag notag--hide">{{ _('Hide tags') }}</span>
+        </th>
+        <th class="col--ac-tried">{{ _('AC') }} / {{ _('Tried') }}</th>
+        <th class="col--difficulty">{{ _('Difficulty') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for pdoc in pdocs -%}
+      {% set psdoc = psdict[pdoc.domainId + '#' + pdoc.docId] %}
+      <tr data-pid="{{ pdoc.docId }}" style="background-color: {{ '#ffffff' if loop.index % 2 == 0 else 'rgb(230, 244, 255)' }}">
+        {% if handler.user.hasPriv(PRIV.PRIV_USER_PROFILE) %}
+          {% if psdoc['rid'] %}
+            {{ record.render_status_td(psdoc, rid_key='rid', class="edit-mode-hide", allDomain=pdoc.domainId!==handler.args.domainId) }}
+          {% else %}
+            <td class="col--status record-status--border edit-mode-hide"> - </td>
+          {% endif %}
+        {% endif %}
+        <td class="col--name col--problem-name">
+          {% if handler.user.hasPriv(PRIV.PRIV_USER_PROFILE) %}
+            <form class="form--inline" action="{{ url('problem_main', domainId = pdoc.domainId) }}" method="post">
+              <input type="hidden" name="pid" value="{{ pdoc.docId }}">
+              <input type="hidden" name="operation" value="{{ "star" if not psdoc.star else "unstar" }}">
+              <button class="star{% if psdoc.star %} activated{% endif %}" type="submit">
+                <span class="starred--hide"><span class="icon icon-star--outline" data-tooltip="{{ _('Star') }}"></span></span>
+                <span class="starred--show"><span class="icon icon-star" data-tooltip="{{ _('Unstar') }}"></span></span>
+              </button>
+            </form>
+          {% endif %}
+          {{ problem.render_problem_title(pdoc) }}
+        </td>
+        <td class="col--ac-tried">{{ pdoc.nAccept }} / {{ pdoc.nSubmit }}</td>
+        <td class="col--difficulty">{{ pdoc['difficulty'] or lib.difficulty(pdoc.nSubmit, pdoc.nAccept) or _('(None)') }}</td>
+      </tr>
+    {%- endfor -%}
+    </tbody>
+  </table>
+</el-card>
+
+
+
+
+{% set payload = firstpages['contest']  %}
+{% set tdocs = payload[0] %}
+{% set tsdict = payload[1] %}
+{% if tdocs.length %}
+  <div class="section page--contest_main" style="margin: 15px;">
+    <div class="section__header">
+      <h2 class="section__title"><i class="el-icon-edit-outline"></i> 竞技场</h2>
+    </div>
+
+    <ol class="section__list contest__list">
+      {%- for tdoc in tdocs -%}
+        <li class="section__list__item contest__item contest-type--{{ tdoc.rule }} {% if model.contest.isOngoing(tdoc, tsdoc) %}{{ 'live' }}{% elif model.contest.isUpcoming(tdoc) %}{{ 'ready' }}{% endif %}">
+          <div class="media">
+            <div class="media__left medium">
+              <div class="contest__date numbox">
+                <div class="numbox__num large">{{ datetimeSpan(tdoc['beginAt'], false, 'D')|safe }}</div>
+                <div class="numbox__text">{{ datetimeSpan(tdoc['beginAt'], false, 'YYYY-M')|safe }}</div>
+              </div>
+            </div>
+            <div class="media__body medium">
+              <h1 class="contest__title"><a href="{{ url('contest_detail', tid=tdoc.docId) }}" data-emoji-enabled>{{ tdoc.title }}</a></h1>
+              <ul class="supplementary list">
+                <li>
+                  <a href="{{ url('contest_main', query={rule:tdoc.rule}) }}" class="contest-type-tag"><span class="icon icon-award"></span>{{ _(model.contest.RULES[tdoc.rule].TEXT) }}</a>
+                </li>
+                {% if tdoc.rated %}
+                  <li class="contest-tag-rated"><span class="icon icon-star"></span>Rated</li>
+                {% endif %}
+                <li>
+                  <span class="icon icon-schedule--fill text-blue"></span> {{ contest.render_duration(tdoc) }} {{ _('hour(s)') }}
+                </li>
+                <li>
+                  <span class="icon icon-user--multiple"></span> {{ tdoc['attend']|default(0) }}
+                </li>
+                {% if tsdict[tdoc.docId]['attend'] == 1 %}
+                  <li class="contest__info-attended">
+                    <span class="icon icon-check"></span> {{ _('Attended') }}
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ol>
+    <ul class="pager pager-bottom"><li>
+      <a class="pager__item next link" href="{{ url('contest_main') }}">{{ _('More') }} ></a>
+    </li></ul>
+  </div>
+{% endif %}
+
+
+
+
+{% set payload = firstpages['ranking']  %}
+<div style="margin: 15px;"> {% include "partials/homepage/ranking.html" %}</div>
+
+
+{% set payload = firstpages['discussion']  %}
+<div style="margin: 15px;"> {% include "partials/homepage/discussion.html" %}</div>
+{#    <el-select v-model="value" placeholder="请选择">#}
+{#    <el-option#}
+{#      v-for="item in options"#}
+{#      :key="item.value"#}
+{#      :label="item.label"#}
+{#      :value="item.value">#}
+{#    </el-option>#}
+{#  </el-select>#}
+
+{#<script>console.log(qs)</script>#}
+{#    <div class="large-{{ column.width }} columns">#}
+{#    {% for column in contents %}#}
+{#      {% for s in column.sections %}#}
+{#        {% if templateExists("partials/homepage/" + s[0] + ".html") %}#}
+{#          {% set payload = s[1] %}#}
+{#          {% include "partials/homepage/" + s[0] + ".html" %}#}
+{#        {% else %}#}
+{#          {% set payload = _("Template {0} not found.").format(s[0]) %}#}
+{#          {% include "partials/homepage/error.html" %}#}
+{#        {% endif %}#}
+{#      {% endfor %}#}
+{#  {% endfor %}#}
+{#    </div>#}
+
+{#  {% for column in contents %}#}
+{#    <div class="large-{{ column.width }} columns">#}
+{#      {% for s in column.sections %}#}
+{#        {% if templateExists("partials/homepage/" + s[0] + ".html") %}#}
+{#          {% set payload = s[1] %}#}
+{#          {% include "partials/homepage/" + s[0] + ".html" %}#}
+{#        {% else %}#}
+{#          {% set payload = _("Template {0} not found.").format(s[0]) %}#}
+{#          {% include "partials/homepage/error.html" %}#}
+{#        {% endif %}#}
+{#      {% endfor %}#}
+{#    </div>#}
+{#  {% endfor %}#}
+</div>
+{#<script src="//unpkg.com/vue@2/dist/vue.js"></script>#}
+{#<script src="//unpkg.com/element-ui@2.15.14/lib/index.js"></script>#}
+{#<div id="app">#}
+{#<template>#}
+{#  <el-select v-model="value" placeholder="请选择">#}
+{#    <el-option#}
+{#      v-for="item in options"#}
+{#      :key="item.value"#}
+{#      :label="item.label"#}
+{#      :value="item.value">#}
+{#    </el-option>#}
+{#  </el-select>#}
+{#</template>#}
+{#</div>#}
+
+{#    <script>#}
+{#    // 创建vue#}
+{#    new Vue({#}
+{#        // 控制的标签容器#}
+{#        el: '#app1',#}
+{#    })#}
+{#</script>#}
+{#    <style>#}
+{#   .button-container {#}
+{#    display: flex;#}
+{#    justify-content: center; /* 使按钮整体居中 */#}
+{#    flex-wrap: nowrap;       /* 防止按钮换行 */#}
+{#  }#}
+{##}
+{#  .button-container .el-button {#}
+{#    margin: 0 10px; /* 按钮之间的间距，可根据需要调整 */#}
+{#  }#}
+{##}
+{#  .button-container .el-button:first-child,#}
+{#  .button-container .el-button:last-child {#}
+{#    margin: 0; /* 移除第一个和最后一个按钮的外边距 */#}
+{#  }#}
+{#    </style>#}
+{% endblock %}

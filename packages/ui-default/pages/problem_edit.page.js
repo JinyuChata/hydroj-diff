@@ -178,6 +178,14 @@ export default new NamedPage(['problem_create', 'problem_edit'], (pagename) => {
     });
   });
   $(document).on('change', '[name="tag"]', parseCategorySelection);
+  // zjy modified
+  $('[name="permission"]').removeAttr('disabled').on('change', () => {
+    const type = $('[name="permission"]').val();
+    $('[data-perm] input').attr('disabled', 'disabled');
+    $('[data-perm]').hide();
+    $(`[data-perm="${type}"] input`).removeAttr('disabled');
+    $(`[data-perm="${type}"]`).show();
+  }).trigger('change');
   buildCategoryFilter();
   parseCategorySelection();
 
